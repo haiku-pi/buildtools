@@ -69,10 +69,12 @@ Boston, MA 02111-1307, USA.  */
 #undef LIB_SPEC
 #define LIB_SPEC "-lroot"
 
-/* Use --as-needed -lgcc_s for eh support.  */
-#ifdef HAVE_LD_AS_NEEDED
+/* Use --as-needed -lgcc_s for eh support. Haiku's ld always has
+   --as-needed; but configure's probe for it fails when building a cross
+   compiler before its binutils exist, and without libgcc_s a C++ program's
+   unwind tables register with the static libgcc's private unwinder, which
+   libstdc++'s never sees: every throw ends in terminate().  */
 #define USE_LD_AS_NEEDED 1
-#endif
 
 /* Pass --eh-frame-hdr to provide a PT_EH_FRAME section, allowing unwind 
    libraries to get frame information. */
