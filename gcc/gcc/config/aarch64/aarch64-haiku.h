@@ -64,6 +64,14 @@
 #define STACK_CHECK_STATIC_BUILTIN 1
 
 
+/* Emit DT_GNU_HASH as well as DT_HASH unless configured otherwise
+   (--with-linker-hash-style).  The runtime loader uses the GNU hash table's
+   Bloom filter to skip an image that does not define a symbol; DT_HASH
+   stays for tools that only read it.  */
+#ifndef LINKER_HASH_STYLE
+#define LINKER_HASH_STYLE "both"
+#endif
+
 #undef	LINK_SPEC
 #define LINK_SPEC "-m " TARGET_LINKER_EMULATION " %{!r:-shared} %{nostart:-e 0} %{shared:-e 0} %{!shared: %{!nostart: -no-undefined}}\
 	%{mbig-endian:-EB} %{mlittle-endian:-EL} " CA53_ERR_835769_SPEC " " CA53_ERR_843419_SPEC " -X"
