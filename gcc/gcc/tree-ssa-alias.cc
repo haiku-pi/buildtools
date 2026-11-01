@@ -1,5 +1,5 @@
 /* Alias analysis for trees.
-   Copyright (C) 2004-2025 Free Software Foundation, Inc.
+   Copyright (C) 2004-2026 Free Software Foundation, Inc.
    Contributed by Diego Novillo <dnovillo@redhat.com>
 
 This file is part of GCC.
@@ -423,7 +423,7 @@ bool
 ptrs_compare_unequal (tree ptr1, tree ptr2)
 {
   /* First resolve the pointers down to a SSA name pointer base or
-     a VAR_DECL, PARM_DECL or RESULT_DECL.  This explicitely does
+     a VAR_DECL, PARM_DECL or RESULT_DECL.  This explicitly does
      not yet try to handle LABEL_DECLs, FUNCTION_DECLs, CONST_DECLs
      or STRING_CSTs which needs points-to adjustments to track them
      in the points-to sets.  */
@@ -2788,7 +2788,6 @@ check_fnspec (gcall *call, ao_ref *ref, bool clobber)
 	      }
 	  if (clobber
 	      && fnspec.errno_maybe_written_p ()
-	      && flag_errno_math
 	      && targetm.ref_may_alias_errno (ref))
 	    return 1;
 	  return 0;
@@ -4171,7 +4170,7 @@ attr_fnspec::verify ()
     }
 }
 
-/* Return ture if TYPE1 and TYPE2 will always give the same answer
+/* Return true if TYPE1 and TYPE2 will always give the same answer
    when compared with other types using same_type_for_tbaa.  */
 
 static bool
@@ -4195,7 +4194,7 @@ types_equal_for_same_type_for_tbaa_p (tree type1, tree type2,
     return TYPE_CANONICAL (type1) == TYPE_CANONICAL (type2);
 }
 
-/* Return ture if TYPE1 and TYPE2 will always give the same answer
+/* Return true if TYPE1 and TYPE2 will always give the same answer
    when compared with other types using same_type_for_tbaa.  */
 
 bool
@@ -4382,7 +4381,7 @@ ao_compare::compare_ao_refs (ao_ref *ref1, ao_ref *ref2,
       i++;
     }
 
-  /* For variable accesses we can not rely on offset match bellow.
+  /* For variable accesses we can not rely on offset match below.
      We know that paths are struturally same, so only check that
      starts of TBAA paths did not diverge.  */
   if (!known_eq (ref1->size, ref1->max_size)

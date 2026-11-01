@@ -58,7 +58,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GM2 1"
-.TH GM2 1 2026-06-12 gcc-15.3.0 GNU
+.TH GM2 1 2026-08-07 gcc-16.2.0 GNU
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -268,6 +268,16 @@ following include paths.
 .IX Item "-fm2-pathnameI"
 for internal use only: used by the driver to copy the user facing \fB\-I\fR
 option.
+.ie n .IP """\-fm2\-pathname\-root=\fIpathroot\fR""" 4
+.el .IP \f(CW\-fm2\-pathname\-root=\fR\f(CIpathroot\fR\f(CW\fR 4
+.IX Item "-fm2-pathname-root=pathroot"
+add search paths derived from the specified \fIpathroot\fR.
+.ie n .IP """\-fm2\-pathname\-rootI""" 4
+.el .IP \f(CW\-fm2\-pathname\-rootI\fR 4
+.IX Item "-fm2-pathname-rootI"
+for internal use only: used by the driver to copy every user
+\&\fB\-fm2\-pathname\-root=\fR facing option in order with all other
+\&\fB\-I\fR options.
 .ie n .IP """\-fm2\-plugin""" 4
 .el .IP \f(CW\-fm2\-plugin\fR 4
 .IX Item "-fm2-plugin"
@@ -287,6 +297,10 @@ lines compiled.
 .el .IP \f(CW\-fm2\-strict\-type\fR 4
 .IX Item "-fm2-strict-type"
 experimental flag to turn on the new strict type checker.
+.ie n .IP """\-fm2\-strict\-type\-reason""" 4
+.el .IP \f(CW\-fm2\-strict\-type\-reason\fR 4
+.IX Item "-fm2-strict-type-reason"
+provides more detail why the types are incompatible.
 .ie n .IP """\-fm2\-whole\-program""" 4
 .el .IP \f(CW\-fm2\-whole\-program\fR 4
 .IX Item "-fm2-whole-program"
@@ -480,13 +494,20 @@ or the top of a loop is encountered.
 The option \fB\-Wall\fR will turn on this flag with
 \&\fB\-Wuninit\-variable\-checking=known\fR.
 The \fB\-Wuninit\-variable\-checking=all\fR will increase compile time.
+.ie n .IP """\-fwideset""" 4
+.el .IP \f(CW\-fwideset\fR 4
+.IX Item "-fwideset"
+turn on access to the runtime support library module \fBM2WIDESET\fR.
+By default this option is on.
+Wideset provision can be disabled by \fB\-fno\-wideset\fR
+and no reference will be made to the run time \fBM2WIDESET\fR library.
 .SH "SEE ALSO"
 .IX Header "SEE ALSO"
 \&\fBgpl\fR\|(7), \fBgfdl\fR\|(7), \fBfsf\-funding\fR\|(7), \fBgcc\fR\|(1)
 and the Info entries for \fIgm2\fR and \fIgcc\fR.
 .SH COPYRIGHT
 .IX Header "COPYRIGHT"
-Copyright (c) 1999\-2025 Free Software Foundation, Inc.
+Copyright (c) 1999\-2026 Free Software Foundation, Inc.
 .PP
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3 or

@@ -6,7 +6,7 @@
 --                                                                          --
 --                                 B o d y                                  --
 --                                                                          --
---          Copyright (C) 2011-2025, Free Software Foundation, Inc.         --
+--          Copyright (C) 2011-2026, Free Software Foundation, Inc.         --
 --                                                                          --
 -- GNAT is free software;  you can  redistribute it  and/or modify it under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -694,5 +694,14 @@ package body System.Storage_Pools.Subpools is
 
       Attach (N_Ptr, To.Subpools'Unchecked_Access);
    end Set_Pool_Of_Subpool;
+
+   -------------------
+   -- _Adjust_Clone --
+   -------------------
+
+   procedure _Adjust_Clone (Subpool : in out Root_Subpool) is
+   begin
+      Finalization_Primitives.Initialize (Subpool.Collection);
+   end _Adjust_Clone;
 
 end System.Storage_Pools.Subpools;

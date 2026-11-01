@@ -1,5 +1,5 @@
 /* VSETVL pass for RISC-V 'V' Extension for GNU compiler.
-   Copyright (C) 2022-2025 Free Software Foundation, Inc.
+   Copyright (C) 2022-2026 Free Software Foundation, Inc.
    Contributed by Juzhe Zhong (juzhe.zhong@rivai.ai), RiVAI Technologies Ltd.
 
 This file is part of GCC.
@@ -100,31 +100,28 @@ using namespace riscv_vector;
 static void
 bitmap_union_of_preds_with_entry (sbitmap dst, sbitmap *src, basic_block b)
 {
-  unsigned int set_size = dst->size;
-  edge e;
-  unsigned ix;
-
-  for (ix = 0; ix < EDGE_COUNT (b->preds); ix++)
+  /* Handle case with no predecessors (including ENTRY block).  */
+  if (EDGE_COUNT (b->preds) == 0)
     {
-      e = EDGE_PRED (b, ix);
-      bitmap_copy (dst, src[e->src->index]);
-      break;
+      bitmap_clear (dst);
+      return;
     }
 
-  if (ix == EDGE_COUNT (b->preds))
-    bitmap_clear (dst);
-  else
-    for (ix++; ix < EDGE_COUNT (b->preds); ix++)
-      {
-	unsigned int i;
-	SBITMAP_ELT_TYPE *p, *r;
+  edge e;
+  edge_iterator ei;
+  /* Union remaining predecessors' bitmaps.  */
+  FOR_EACH_EDGE (e, ei, b->preds)
+    {
+      /* Initialize with first predecessor's bitmap.  */
+      if (ei.index == 0)
+	{
+	  bitmap_copy (dst, src[e->src->index]);
+	  continue;
+	}
 
-	e = EDGE_PRED (b, ix);
-	p = src[e->src->index]->elms;
-	r = dst->elms;
-	for (i = 0; i < set_size; i++)
-	  *r++ |= *p++;
-      }
+      /* Perform bitmap OR operation element-wise.  */
+      bitmap_ior (dst, dst, src[e->src->index]);
+    }
 }
 
 /* Compute the reaching definition in and out based on the gen and KILL
@@ -261,7 +258,7 @@ policy_to_str (bool agnostic_p)
 
 /* Return true if it is an RVV instruction depends on VTYPE global
    status register.  */
-static bool
+bool
 has_vtype_op (rtx_insn *rinsn)
 {
   return recog_memoized (rinsn) >= 0 && get_attr_has_vtype_op (rinsn);
@@ -390,7 +387,7 @@ vector_config_insn_p (rtx_insn *rinsn)
 }
 
 /* Return true if it is vsetvldi or vsetvlsi.  */
-static bool
+bool
 vsetvl_insn_p (rtx_insn *rinsn)
 {
   if (!rinsn || !vector_config_insn_p (rinsn))
@@ -470,7 +467,7 @@ get_vl (rtx_insn *rinsn)
 }
 
 /* Helper function to get AVL operand.  */
-static rtx
+rtx
 get_avl (rtx_insn *rinsn)
 {
   if (vsetvl_insn_p (rinsn) || vsetvl_discard_result_insn_p (rinsn))
@@ -495,7 +492,7 @@ get_default_ma ()
 }
 
 /* Helper function to get MA operand.  */
-static bool
+bool
 mask_agnostic_p (rtx_insn *rinsn)
 {
   /* If it doesn't have MA, we return agnostic by default.  */
@@ -1228,9 +1225,10 @@ public:
 	      dflags |= demand_flags::DEMAND_LMUL_P;
 	  }
 
-	if (!m_ta)
+	/* Demand policy for agnostic if the uarch has a preference.  */
+	if (!m_ta || riscv_prefer_agnostic_p ())
 	  dflags |= demand_flags::DEMAND_TAIL_POLICY_P;
-	if (!m_ma)
+	if (!m_ma || riscv_prefer_agnostic_p ())
 	  dflags |= demand_flags::DEMAND_MASK_POLICY_P;
       }
 
@@ -3612,8 +3610,7 @@ pre_vsetvl::emit_vsetvl ()
 	    }
 	  start_sequence ();
 	  insert_vsetvl_insn (EMIT_DIRECT, footer_info);
-	  rtx_insn *rinsn = get_insns ();
-	  end_sequence ();
+	  rtx_insn *rinsn = end_sequence ();
 	  default_rtl_profile ();
 	  insert_insn_on_edge (rinsn, eg);
 	  need_commit = true;
@@ -3644,8 +3641,7 @@ pre_vsetvl::emit_vsetvl ()
       start_sequence ();
 
       insert_vsetvl_insn (EMIT_DIRECT, info);
-      rtx_insn *rinsn = get_insns ();
-      end_sequence ();
+      rtx_insn *rinsn = end_sequence ();
       default_rtl_profile ();
 
       /* We should not get an abnormal edge here.  */

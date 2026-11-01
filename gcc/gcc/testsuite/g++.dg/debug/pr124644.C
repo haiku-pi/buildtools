@@ -1,5 +1,5 @@
 // { dg-do compile }
-// { dg-options "-O -w -g1 -std=gnu++20 -fchecking" }
+// { dg-options "-O -w -g1 -fchecking" }
 
 template <int __v> struct integral_constant {
   static constexpr int value = __v;

@@ -1,5 +1,5 @@
 /* function_base implementation for RISC-V 'V' Extension for GNU compiler.
-   Copyright (C) 2022-2025 Free Software Foundation, Inc.
+   Copyright (C) 2022-2026 Free Software Foundation, Inc.
    Contributed by Ju-Zhe Zhong (juzhe.zhong@rivai.ai), RiVAI Technologies Ltd.
 
    This file is part of GCC.
@@ -151,9 +151,57 @@ public:
       {
 	int unspec = ORDERED_P ? UNSPEC_ORDERED : UNSPEC_UNORDERED;
 	if (STORE_P)
-	  return e.use_exact_insn (
-	    code_for_pred_indexed_store (unspec, e.vector_mode (),
-					 e.index_mode ()));
+	  {
+	    unsigned src_eew_bitsize
+	      = GET_MODE_BITSIZE (GET_MODE_INNER (e.index_mode ()));
+	    unsigned dst_eew_bitsize
+	      = GET_MODE_BITSIZE (GET_MODE_INNER (e.vector_mode ()));
+	    if (dst_eew_bitsize == src_eew_bitsize)
+	      return e.use_exact_insn (
+		code_for_pred_indexed_store_same_eew (unspec, e.vector_mode ()));
+	    else if (dst_eew_bitsize > src_eew_bitsize)
+	      {
+		unsigned factor = dst_eew_bitsize / src_eew_bitsize;
+		switch (factor)
+		  {
+		  case 2:
+		    return e.use_exact_insn (
+		      code_for_pred_indexed_store_x2_greater_eew (
+			unspec, e.vector_mode ()));
+		  case 4:
+		    return e.use_exact_insn (
+		      code_for_pred_indexed_store_x4_greater_eew (
+			unspec, e.vector_mode ()));
+		  case 8:
+		    return e.use_exact_insn (
+		      code_for_pred_indexed_store_x8_greater_eew (
+			unspec, e.vector_mode ()));
+		  default:
+		    gcc_unreachable ();
+		  }
+	      }
+	    else
+	      {
+		unsigned factor = src_eew_bitsize / dst_eew_bitsize;
+		switch (factor)
+		  {
+		  case 2:
+		    return e.use_exact_insn (
+		      code_for_pred_indexed_store_x2_smaller_eew (
+			unspec, e.vector_mode ()));
+		  case 4:
+		    return e.use_exact_insn (
+		      code_for_pred_indexed_store_x4_smaller_eew (
+			unspec, e.vector_mode ()));
+		  case 8:
+		    return e.use_exact_insn (
+		      code_for_pred_indexed_store_x8_smaller_eew (
+			unspec, e.vector_mode ()));
+		  default:
+		    gcc_unreachable ();
+		  }
+	      }
+	  }
 	else
 	  {
 	    unsigned src_eew_bitsize
@@ -595,7 +643,8 @@ public:
 	return e.use_exact_insn (code_for_pred_mov (e.vector_mode ()));
       case OP_TYPE_x:
       case OP_TYPE_f:
-	return e.use_exact_insn (code_for_pred_broadcast (e.vector_mode ()));
+	return e.use_scalar_broadcast_insn
+	  (code_for_pred_broadcast (e.vector_mode ()));
       default:
 	gcc_unreachable ();
       }
@@ -1733,7 +1782,7 @@ public:
     tree rhs_tuple = gimple_call_arg (f.call, 0);
     /* LMUL > 1 non-tuple vector types are not structure,
        we can't use __val[index] to set the subpart.  */
-    if (!riscv_v_ext_tuple_mode_p (TYPE_MODE (TREE_TYPE (rhs_tuple))))
+    if (!riscv_tuple_mode_p (TYPE_MODE (TREE_TYPE (rhs_tuple))))
       return NULL;
     tree index = gimple_call_arg (f.call, 1);
     tree rhs_vector = gimple_call_arg (f.call, 2);
@@ -1764,7 +1813,7 @@ public:
     if (!e.target)
       return NULL_RTX;
     rtx dest = expand_normal (CALL_EXPR_ARG (e.exp, 0));
-    gcc_assert (riscv_v_ext_vector_mode_p (GET_MODE (dest)));
+    gcc_assert (riscv_vla_mode_p (GET_MODE (dest)));
     rtx index = expand_normal (CALL_EXPR_ARG (e.exp, 1));
     rtx src = expand_normal (CALL_EXPR_ARG (e.exp, 2));
     poly_int64 offset = INTVAL (index) * GET_MODE_SIZE (GET_MODE (src));
@@ -1787,7 +1836,7 @@ public:
     tree rhs_tuple = gimple_call_arg (f.call, 0);
     /* LMUL > 1 non-tuple vector types are not structure,
        we can't use __val[index] to get the subpart.  */
-    if (!riscv_v_ext_tuple_mode_p (TYPE_MODE (TREE_TYPE (rhs_tuple))))
+    if (!riscv_tuple_mode_p (TYPE_MODE (TREE_TYPE (rhs_tuple))))
       return NULL;
     tree index = gimple_call_arg (f.call, 1);
     tree field = tuple_type_field (TREE_TYPE (rhs_tuple));
@@ -1803,7 +1852,7 @@ public:
     if (!e.target)
       return NULL_RTX;
     rtx src = expand_normal (CALL_EXPR_ARG (e.exp, 0));
-    gcc_assert (riscv_v_ext_vector_mode_p (GET_MODE (src)));
+    gcc_assert (riscv_vla_mode_p (GET_MODE (src)));
     rtx index = expand_normal (CALL_EXPR_ARG (e.exp, 1));
     poly_int64 offset = INTVAL (index) * GET_MODE_SIZE (GET_MODE (e.target));
     rtx subreg
@@ -1821,7 +1870,7 @@ public:
     tree lhs_type = TREE_TYPE (f.lhs);
     /* LMUL > 1 non-tuple vector types are not structure,
    we can't use __val[index] to set the subpart.  */
-    if (!riscv_v_ext_tuple_mode_p (TYPE_MODE (lhs_type)))
+    if (!riscv_tuple_mode_p (TYPE_MODE (lhs_type)))
       return NULL;
 
     /* Replace the call with a clobber of the result (to prevent it from
@@ -1852,7 +1901,7 @@ public:
   {
     if (!e.target)
       return NULL_RTX;
-    gcc_assert (riscv_v_ext_vector_mode_p (GET_MODE (e.target)));
+    gcc_assert (riscv_vla_mode_p (GET_MODE (e.target)));
     unsigned int nargs = call_expr_nargs (e.exp);
     for (unsigned int i = 0; i < nargs; i++)
       {

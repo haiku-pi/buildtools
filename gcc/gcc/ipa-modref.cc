@@ -1,5 +1,5 @@
 /* Search for references that a functions loads or stores.
-   Copyright (C) 2020-2025 Free Software Foundation, Inc.
+   Copyright (C) 2020-2026 Free Software Foundation, Inc.
    Contributed by David Cepelik and Jan Hubicka
 
 This file is part of GCC.
@@ -1590,7 +1590,7 @@ modref_access_analysis::process_fnspec (gcall *call)
 	      m_summary_lto->stores->insert (current_function_decl,
 					     0, 0, a, false);
 	  }
-      if (fnspec.errno_maybe_written_p () && flag_errno_math)
+      if (fnspec.errno_maybe_written_p ())
 	{
 	  if (m_summary)
 	    m_summary->writes_errno = true;
@@ -3752,8 +3752,8 @@ modref_write ()
 
   for (i = 0; i < lto_symtab_encoder_size (encoder); i++)
     {
-      symtab_node *snode = lto_symtab_encoder_deref (encoder, i);
-      cgraph_node *cnode = dyn_cast <cgraph_node *> (snode);
+      toplevel_node *tnode = lto_symtab_encoder_deref (encoder, i);
+      cgraph_node *cnode = dyn_cast <cgraph_node *> (tnode);
       modref_summary_lto *r;
 
       if (cnode && cnode->definition && !cnode->alias
@@ -3765,8 +3765,8 @@ modref_write ()
 
   for (i = 0; i < lto_symtab_encoder_size (encoder); i++)
     {
-      symtab_node *snode = lto_symtab_encoder_deref (encoder, i);
-      cgraph_node *cnode = dyn_cast <cgraph_node *> (snode);
+      toplevel_node *tnode = lto_symtab_encoder_deref (encoder, i);
+      cgraph_node *cnode = dyn_cast <cgraph_node *> (tnode);
 
       if (cnode && cnode->definition && !cnode->alias)
 	{

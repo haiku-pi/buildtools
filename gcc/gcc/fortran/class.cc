@@ -1,5 +1,5 @@
 /* Implementation of Fortran 2003 Polymorphism.
-   Copyright (C) 2009-2025 Free Software Foundation, Inc.
+   Copyright (C) 2009-2026 Free Software Foundation, Inc.
    Contributed by Paul Richard Thomas <pault@gcc.gnu.org>
    and Janus Weil <janus@gcc.gnu.org>
 
@@ -1733,10 +1733,12 @@ generate_finalization_wrapper (gfc_symbol *derived, gfc_namespace *ns,
 {
   gfc_symbol *final, *array, *fini_coarray, *byte_stride, *sizes, *strides;
   gfc_symbol *ptr = NULL, *idx, *idx2, *is_contiguous, *offset, *nelem;
+  gfc_symbol *result = NULL;
   gfc_component *comp;
   gfc_namespace *sub_ns;
   gfc_code *last_code, *block;
   char *name;
+  char *result_name;
   bool finalizable_comp = false;
   gfc_expr *ancestor_wrapper = NULL, *rank;
   gfc_iterator *iter;
@@ -1824,7 +1826,6 @@ generate_finalization_wrapper (gfc_symbol *derived, gfc_namespace *ns,
   final->attr.function = 1;
   final->attr.pure = 0;
   final->attr.recursive = 1;
-  final->result = final;
   final->ts.type = BT_INTEGER;
   final->ts.kind = 4;
   final->attr.artificial = 1;
@@ -1832,6 +1833,26 @@ generate_finalization_wrapper (gfc_symbol *derived, gfc_namespace *ns,
   final->attr.if_source = IFSRC_DECL;
   if (ns->proc_name->attr.flavor == FL_MODULE)
     final->module = ns->proc_name->name;
+
+  /* Create a separate result symbol instead of using final->result = final.
+     Self-referencing result symbols (final->result = final) create a cycle
+     in the symbol structure that causes an ICE in gimplify_call_expr when
+     the finalizer wrapper is used as a procedure pointer initializer.  */
+  result_name = xasprintf ("__result_%s", tname);
+  if (gfc_get_symbol (result_name, sub_ns, &result) != 0)
+    gfc_internal_error ("Failed to create finalizer result symbol");
+  free (result_name);
+
+  if (!gfc_add_flavor (&result->attr, FL_VARIABLE, result->name,
+		       &gfc_current_locus)
+      || !gfc_add_result (&result->attr, result->name, &gfc_current_locus))
+    gfc_internal_error ("Failed to set finalizer result attributes");
+
+  result->ts = final->ts;
+  result->attr.artificial = 1;
+  gfc_set_sym_referenced (result);
+  gfc_commit_symbol (result);
+  final->result = result;
   gfc_set_sym_referenced (final);
   gfc_commit_symbol (final);
 
@@ -1959,7 +1980,7 @@ generate_finalization_wrapper (gfc_symbol *derived, gfc_namespace *ns,
 
   /* Set return value to 0.  */
   last_code = gfc_get_code (EXEC_ASSIGN);
-  last_code->expr1 = gfc_lval_expr_from_sym (final);
+  last_code->expr1 = gfc_lval_expr_from_sym (result);
   last_code->expr2 = gfc_get_int_expr (4, NULL, 0);
   sub_ns->code = last_code;
 
@@ -2440,9 +2461,14 @@ gfc_find_derived_vtab (gfc_symbol *derived)
   if (derived->attr.pdt_template)
     return NULL;
 
-  /* Find the top-level namespace.  */
+  /* Find the top-level namespace, stopping at module/submodule boundaries.
+     A submodule's namespace may have its parent pointer set to the ancestor
+     module namespace for host-association purposes; we must not escape that
+     boundary, because vtables for types defined in a submodule belong in
+     the submodule namespace, not in its parent module.  */
   for (ns = gfc_current_ns; ns; ns = ns->parent)
-    if (!ns->parent)
+    if (!ns->parent
+	|| (ns->proc_name && ns->proc_name->attr.flavor == FL_MODULE))
       break;
 
   /* If the type is a class container, use the underlying derived type.  */
@@ -2465,6 +2491,7 @@ gfc_find_derived_vtab (gfc_symbol *derived)
   /* Work in the gsymbol namespace if the top-level namespace is a module.
      This ensures that the vtable is unique, which is required since we use
      its address in SELECT TYPE.  */
+  gfc_namespace *module_ns = ns;
   if (gsym && gsym->ns && ns && ns->proc_name
       && ns->proc_name->attr.flavor == FL_MODULE)
     ns = gsym->ns;
@@ -2490,6 +2517,20 @@ gfc_find_derived_vtab (gfc_symbol *derived)
 	gfc_find_symbol (name, ns, 0, &vtab);
       if (vtab == NULL)
 	gfc_find_symbol (name, derived->ns, 0, &vtab);
+      /* If all else fails, look in the module/submodule namespace so that
+	 the module variable and procedure body translations find the same
+	 frontend symbol and backend decl.  */
+      if (vtab == NULL && module_ns != ns)
+	gfc_find_symbol (name, module_ns, 0, &vtab);
+
+      /* Fix up a stale non-use-associated duplicate vtab.  */
+      if (vtab
+	  && (derived->attr.use_assoc || derived->attr.used_in_submodule)
+	  && !vtab->attr.use_assoc && !vtab->module)
+	{
+	  vtab->attr.use_assoc = 1;
+	  vtab->module = derived->module;
+	}
 
       if (vtab == NULL)
 	{
@@ -2828,6 +2869,19 @@ yes:
       gcc_assert (final->initializer
 		  && final->initializer->expr_type != EXPR_NULL);
       *final_expr = final->initializer;
+
+      /* Fix up a stale non-use-associated duplicate vtab.  */
+      if ((derived->attr.use_assoc || derived->attr.used_in_submodule)
+	  && (*final_expr)->expr_type == EXPR_VARIABLE
+	  && (*final_expr)->symtree)
+	{
+	  gfc_symbol *final_sym = (*final_expr)->symtree->n.sym;
+	  if (final_sym && !final_sym->attr.use_assoc && !final_sym->module)
+	    {
+	      final_sym->attr.use_assoc = 1;
+	      final_sym->module = derived->module;
+	    }
+	}
     }
   return true;
 }

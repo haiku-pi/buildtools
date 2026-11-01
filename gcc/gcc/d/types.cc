@@ -1,5 +1,5 @@
 /* types.cc -- Lower D frontend types to GCC trees.
-   Copyright (C) 2006-2025 Free Software Foundation, Inc.
+   Copyright (C) 2006-2026 Free Software Foundation, Inc.
 
 GCC is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -901,9 +901,9 @@ public:
 
   void visit (TypeSArray *t) final override
   {
-    if (t->dim->isConst () && t->dim->type->isIntegral ())
+    if (t->dim->isConst () && dmd::isIntegral (t->dim->type))
       {
-	uinteger_t size = t->dim->toUInteger ();
+	uinteger_t size = dmd::toUInteger (t->dim);
 	t->ctype = make_array_type (t->next, size);
       }
     else
@@ -918,7 +918,7 @@ public:
 
   void visit (TypeVector *t) final override
   {
-    int nunits = t->basetype->isTypeSArray ()->dim->toUInteger ();
+    int nunits = dmd::toUInteger (t->basetype->isTypeSArray ()->dim);
     tree inner = build_ctype (t->elementType ());
 
     /* Same rationale as void static arrays.  */
@@ -1160,7 +1160,9 @@ public:
 		  continue;
 
 		tree ident = get_identifier (member->ident->toChars ());
-		tree value = build_integer_cst (member->value ()->toInteger (),
+
+		Expression *evalue = member->value ();
+		tree value = build_integer_cst (dmd::toInteger (evalue),
 						basetype);
 
 		/* Build an identifier for the enumeration constant.  */
@@ -1243,7 +1245,7 @@ public:
     /* For structs with a user defined postblit, copy constructor, or a
        destructor, also set TREE_ADDRESSABLE on the type and all variants.
        This will make the struct be passed around by reference.  */
-    if (!t->sym->isPOD ())
+    if (!dmd::isPOD (t->sym))
       TREE_ADDRESSABLE (t->ctype) = 1;
 
     if (t->sym->members)

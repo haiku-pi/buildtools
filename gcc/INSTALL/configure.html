@@ -3,7 +3,7 @@
 <!-- Created by GNU Texinfo 7.1, https://www.gnu.org/software/texinfo/ -->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<!-- Copyright © 1988-2025 Free Software Foundation, Inc.
+<!-- Copyright © 1988-2026 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3 or
@@ -327,9 +327,8 @@ configurations.
 This can be useful if you need to turn on a non-standard feature by
 default without modifying the compiler&rsquo;s source code, for instance
 <samp class="option">--with-specs=%{!fcommon:%{!fno-common:-fno-common}}</samp>.
-See &ldquo;Spec Files&rdquo; in the main manual
-</p>
-</dd>
+See &ldquo;Spec Files&rdquo; in the GCC Internals manual.
+</p></dd>
 </dl>
 
 </dd>
@@ -593,6 +592,11 @@ but for the linker.
 but for the debug linker (only used on Darwin platforms so far).
 </p>
 </dd>
+<dt><code class="code">--with-windres=<var class="var">pathname</var></code></dt>
+<dd><p>Same as <a class="uref" href="#with-as"><samp class="option">--with-as</samp></a>
+but for the Windows resource compiler.
+</p>
+</dd>
 <dt><code class="code">--with-tls=<var class="var">dialect</var></code></dt>
 <dd><p>Specify the default TLS dialect, for systems where there is a choice.
 For ARM targets, possible values for <var class="var">dialect</var> are <code class="code">gnu</code> or
@@ -600,6 +604,9 @@ For ARM targets, possible values for <var class="var">dialect</var> are <code cl
 descriptor-based dialect.
 For RISC-V targets, possible values for <var class="var">dialect</var> are <code class="code">trad</code> or
 <code class="code">desc</code>, which select between the traditional GNU dialect and the GNU TLS
+descriptor-based dialect.
+For i386, x86-64 targets, possible values for <var class="var">dialect</var> are <code class="code">gnu</code> or
+<code class="code">gnu2</code>, which select between the original GNU dialect and the GNU TLS
 descriptor-based dialect.
 </p>
 </dd>
@@ -706,11 +713,11 @@ default set of libraries is selected based on the value of
 <dt><code class="code">amdgcn*-*-*</code></dt>
 <dd><p><var class="var">list</var> is a comma separated list of ISA names (allowed values:
 <code class="code">gfx900</code>, <code class="code">gfx902</code>, <code class="code">gfx904</code>, <code class="code">gfx906</code>, <code class="code">gfx908</code>,
-<code class="code">gfx909</code>, <code class="code">gfx90a</code>, <code class="code">gfx90c</code>, <code class="code">gfx9-generic</code>,
-<code class="code">gfx1030</code>, <code class="code">gfx1031</code>, <code class="code">gfx1032</code>, <code class="code">gfx1033</code>,
-<code class="code">gfx1034</code>, <code class="code">gfx1035</code>, <code class="code">gfx1036</code>, <code class="code">gfx10-3-generic</code>,
-<code class="code">gfx1100</code>, <code class="code">gfx1101</code>, <code class="code">gfx1102</code>, <code class="code">gfx1103</code>,
-<code class="code">gfx1150</code>, <code class="code">gfx1151</code>, <code class="code">gfx1152</code>, <code class="code">gfx1153</code>,
+<code class="code">gfx909</code>, <code class="code">gfx90a</code>, <code class="code">gfx90c</code>, <code class="code">gfx942</code>, <code class="code">gfx950</code>,
+<code class="code">gfx9-generic</code>, <code class="code">gfx9-4-generic</code>, <code class="code">gfx1030</code>, <code class="code">gfx1031</code>,
+<code class="code">gfx1032</code>, <code class="code">gfx1033</code>, <code class="code">gfx1034</code>, <code class="code">gfx1035</code>, <code class="code">gfx1036</code>,
+<code class="code">gfx10-3-generic</code>, <code class="code">gfx1100</code>, <code class="code">gfx1101</code>, <code class="code">gfx1102</code>,
+<code class="code">gfx1103</code>, <code class="code">gfx1150</code>, <code class="code">gfx1151</code>, <code class="code">gfx1152</code>, <code class="code">gfx1153</code>,
 <code class="code">gfx11-generic</code>).  It ought not include the name of the default
 ISA, specified via <samp class="option">--with-arch</samp>.  If <var class="var">list</var> is empty, then there
 will be no multilibs and only the default run-time library will be built.  If
@@ -910,23 +917,23 @@ for riscv*-*-elf*.  The accepted values and meanings are given below.
 <p>Every config is constructed with four components: architecture string, ABI,
 reuse rule with architecture string and reuse rule with sub-extension.
 </p>
-<p>Example 1: Add multi-lib suppport for rv32i with ilp32.
+<p>Example 1: Add multi-lib support for rv32i with ilp32.
 </p><div class="example smallexample">
 <pre class="example-preformatted">rv32i-ilp32--
 </pre></div>
 
-<p>Example 2: Add multi-lib suppport for rv32i with ilp32 and rv32imafd with ilp32.
+<p>Example 2: Add multi-lib support for rv32i with ilp32 and rv32imafd with ilp32.
 </p><div class="example smallexample">
 <pre class="example-preformatted">rv32i-ilp32--;rv32imafd-ilp32--
 </pre></div>
 
-<p>Example 3: Add multi-lib suppport for rv32i with ilp32; rv32im with ilp32 and
+<p>Example 3: Add multi-lib support for rv32i with ilp32; rv32im with ilp32 and
 rv32ic with ilp32 will reuse this multi-lib set.
 </p><div class="example smallexample">
 <pre class="example-preformatted">rv32i-ilp32-rv32im-c
 </pre></div>
 
-<p>Example 4: Add multi-lib suppport for rv64ima with lp64; rv64imaf with lp64,
+<p>Example 4: Add multi-lib support for rv64ima with lp64; rv64imaf with lp64,
 rv64imac with lp64 and rv64imafc with lp64 will reuse this multi-lib set.
 </p><div class="example smallexample">
 <pre class="example-preformatted">rv64ima-lp64--f,c,fc
@@ -937,18 +944,43 @@ rv64imac with lp64 and rv64imafc with lp64 will reuse this multi-lib set.
 config options, <var class="var">val</var> is a comma separated list of possible code model,
 currently we support medlow and medany.
 </p>
-<p>Example 5: Add multi-lib suppport for rv64ima with lp64; rv64ima with lp64 and
+<p>Example 5: Add multi-lib support for rv64ima with lp64; rv64ima with lp64 and
 medlow code model
 </p><div class="example smallexample">
 <pre class="example-preformatted">rv64ima-lp64--;--cmodel=medlow
 </pre></div>
 
-<p>Example 6: Add multi-lib suppport for rv64ima with lp64; rv64ima with lp64 and
+<p>Example 6: Add multi-lib support for rv64ima with lp64; rv64ima with lp64 and
 medlow code model; rv64ima with lp64 and medany code model
 </p><div class="example smallexample">
 <pre class="example-preformatted">rv64ima-lp64--;--cmodel=medlow,medany
 </pre></div>
 
+</dd>
+<dt><code class="code">--with-multi-buildlist=<var class="var">file</var></code></dt>
+<dd><p>Specify a file containing a list of multilib directories to build.
+</p>
+<p>Each line in the file should contain a single multilib directory name,
+as printed by <code class="code">gcc --print-multi-lib</code>.  Only the listed directories
+will be built and installed.
+</p>
+<p>This option is useful for reducing build time and binary size by
+excluding unnecessary multilib variants.  It is especially beneficial
+for embedded targets or vendor-specific toolchains.
+</p>
+<p>Example file contents:
+</p>
+<div class="example smallexample">
+<pre class="example-preformatted">mips-r6-hard/lib
+mips-r6-soft/lib32
+mipsel-r6-hard/lib64
+</pre></div>
+
+<p>This option is target-independent and can be used with any architecture
+that supports multilibs.  It is passed to both host and target
+configuration stages and used during fixed includes installation and
+multilib directory generation.
+</p>
 </dd>
 <dt><code class="code">--with-endian=<var class="var">endians</var></code></dt>
 <dd><p>Specify what endians to use.
@@ -973,7 +1005,7 @@ Currently only implemented for sh*-*-*.
 </dd>
 <dt><code class="code">--with-cmodel=<var class="var">cmodel</var></code></dt>
 <dd><p>Specify what code model to use by default.
-Currently only implemented for riscv*-*-*.
+Currently only implemented for loongarch*-*-* and riscv*-*-*.
 </p>
 </dd>
 <dt><code class="code">--enable-threads</code></dt>
@@ -1063,10 +1095,10 @@ not use transactional memory.
 <dd><p>Specify which cpu variant the compiler should generate code for by default.
 <var class="var">cpu</var> will be used as the default value of the <samp class="option">-mcpu=</samp> switch.
 This option is only supported on some targets, including ARC, ARM, i386, M68k,
-PowerPC, and SPARC.  It is mandatory for ARC.  The <samp class="option">--with-cpu-32</samp> and
-<samp class="option">--with-cpu-64</samp> options specify separate default CPUs for
-32-bit and 64-bit modes; these options are only supported for aarch64, i386,
-x86-64, PowerPC, and SPARC.
+PowerPC, RISC-V, and SPARC.  It is mandatory for ARC.  The
+<samp class="option">--with-cpu-32</samp> and <samp class="option">--with-cpu-64</samp> options specify separate
+default CPUs for 32-bit and 64-bit modes; these options are only supported for
+aarch64, i386, x86-64, PowerPC, and SPARC.
 </p>
 </dd>
 <dt><code class="code">--with-schedule=<var class="var">cpu</var></code></dt>
@@ -1100,7 +1132,7 @@ libraries.  This option is only supported on Epiphany targets.
 </dd>
 <dt><code class="code">--with-fpmath=<var class="var">isa</var></code></dt>
 <dd><p>This options sets <samp class="option">-mfpmath=sse</samp> by default and specifies the default
-ISA for floating-point arithmetics.  You can select either &lsquo;<samp class="samp">sse</samp>&rsquo; which
+ISA for floating-point arithmetic.  You can select either &lsquo;<samp class="samp">sse</samp>&rsquo; which
 enables <samp class="option">-msse2</samp> or &lsquo;<samp class="samp">avx</samp>&rsquo; which enables <samp class="option">-mavx</samp> by default.
 This option is only supported on i386 and x86-64 targets.
 </p>
@@ -1269,7 +1301,7 @@ a performance penalty.
 <dt><code class="code">--with-mips-plt</code></dt>
 <dd><p>On MIPS targets, make use of copy relocations and PLTs.
 These features are extensions to the traditional
-SVR4-based MIPS ABIs and require support from GNU binutils
+SVR4-based MIPS ABIs and require support from GNU Binutils
 and the runtime C library.
 </p>
 </dd>
@@ -1298,8 +1330,8 @@ The possibilities for <var class="var">ISA-spec-string</var> are:
 </p>
 </dd>
 <dt><code class="code">--enable-__cxa_atexit</code></dt>
-<dd><p>Define if you want to use <code class="code">__cxa_atexit</code>, rather than atexit, to
-register C++ destructors for local statics and global objects.
+<dd><p>Define if you want to use <code class="code">__cxa_atexit</code>, rather than <code class="code">atexit</code>,
+to register C++ destructors for local statics and global objects.
 This is essential for fully standards-compliant handling of
 destructors, but requires <code class="code">__cxa_atexit</code> in libc.  This option is
 currently only available on systems with GNU libc.  When enabled, this
@@ -1517,7 +1549,7 @@ this option is still experimental and not for normal use yet.
 <p>Default is the traditional behavior <samp class="option">--with-aix-soname=&lsquo;<samp class="samp">aix</samp>&rsquo;</samp>.
 </p>
 </dd>
-<dt><code class="code">--enable-languages=<var class="var">lang1</var>,<var class="var">lang2</var>,&hellip;</code></dt>
+<dt><code class="code">--enable-languages=[^]<var class="var">lang1</var>,[^]<var class="var">lang2</var>,&hellip;</code></dt>
 <dd><p>Specify that only a particular subset of compilers and
 their runtime libraries should be built.  For a list of valid values for
 <var class="var">langN</var> you can issue the following command in the
@@ -1526,19 +1558,29 @@ their runtime libraries should be built.  For a list of valid values for
 <pre class="example-preformatted">grep ^language= */config-lang.in
 </pre></div>
 <p>Currently, you can use any of the following:
-<code class="code">all</code>, <code class="code">default</code>, <code class="code">ada</code>, <code class="code">c</code>, <code class="code">c++</code>,
+<code class="code">all</code>, <code class="code">default</code>, <code class="code">ada</code>, <code class="code">algol68</code>, <code class="code">c</code>, <code class="code">c++</code>,
 <code class="code">cobol</code>, <code class="code">d</code>, <code class="code">fortran</code>, <code class="code">go</code>, <code class="code">jit</code>,
 <code class="code">lto</code>, <code class="code">m2</code>, <code class="code">objc</code>, <code class="code">obj-c++</code>.
 Building the Ada compiler has special requirements, see below.
 If you do not pass this flag, or specify the option <code class="code">default</code>, then the
 default languages available in the <samp class="file">gcc</samp> sub-tree will be configured.
-Ada, COBOL, D, Go, Jit, Objective-C++ and Modula-2 are not default languages.
+Algol 68, Ada, COBOL, D, Go, Jit, Objective-C++ and Modula-2 are not default languages.
 LTO is not a
 default language, but is built by default because <samp class="option">--enable-lto</samp> is
 enabled by default.  The other languages are default languages.  If
 <code class="code">all</code> is specified, then all available languages are built.  An
-exception is <code class="code">jit</code> language, which requires
+exception is the <code class="code">jit</code> language, which requires
 <samp class="option">--enable-host-shared</samp> to be included with <code class="code">all</code>.
+</p>
+<p>If a language name is prefixed with a caret, such as
+&lsquo;<samp class="samp">--enable-languages=all,^obj-c++</samp>&rsquo;, then that language will
+not be built.  This is most useful when combined with <code class="code">all</code> or
+<code class="code">default</code>.  A language disabled in this way will be disabled even
+if it is also included without the leading caret earlier or later in
+the argument to <samp class="option">--enable-languages</samp>.  An attempt to disable a
+language that is a prerequisite for an enabled language&mdash;(whether
+the latter language was enabled explicitly, or implicitly via the
+<code class="code">default</code> or <code class="code">all</code> directives)&mdash;is invalid.
 </p>
 </dd>
 <dt><code class="code">--enable-stage1-languages=<var class="var">lang1</var>,<var class="var">lang2</var>,&hellip;</code></dt>
@@ -2130,6 +2172,18 @@ otherwise.  In this case, the target libraries are configured to get
 additional <samp class="option">-fcf-protection</samp> option.
 </p>
 </dd>
+<dt><code class="code">--enable-x86-64-mfentry</code></dt>
+<dt><code class="code">--disable-x86-64-mfentry</code></dt>
+<dd><p>Enable <samp class="option">-mfentry</samp> by default on x86-64 to put the profiling
+counter call, <code class="code">__fentry__</code>, before the prologue so that <samp class="option">-pg</samp>
+can be used with <samp class="option">-fshrink-wrap</samp> which is enabled at <samp class="option">-O1</samp>.
+This configure option is 64-bit only because <code class="code">__fentry__</code> doesn&rsquo;t
+support PIC in 32-bit mode.
+</p>
+<p><samp class="option">--enable-x86-64-mfentry=auto</samp> is default.  <samp class="option">-mfentry</samp> is
+enabled on Linux/x86-64 by default.
+</p>
+</dd>
 <dt><code class="code">--with-riscv-attribute=&lsquo;<samp class="samp">yes</samp>&rsquo;, &lsquo;<samp class="samp">no</samp>&rsquo; or &lsquo;<samp class="samp">default</samp>&rsquo;</code></dt>
 <dd><p>Generate RISC-V attribute by default, in order to record extra build
 information in object.
@@ -2374,6 +2428,43 @@ scripts.
 overrides, you can pass a setting for <code class="env">CONFIG_SITE</code> and set
 variables in the site file.
 </p>
+<h4 class="subheading" id="Algol-68-Specific-Options"><span>Algol 68-Specific Options<a class="copiable-link" href="#Algol-68-Specific-Options"> &para;</a></span></h4>
+
+<p>The following options apply to the build of the Algol 68 runtime library.
+</p>
+<dl class="table">
+<dt><code class="code">--enable-algol68-gc</code></dt>
+<dd><p>Specify that an additional variant of the GNU Algol 68 runtime library
+is built, using an external build of the Boehm-Demers-Weiser garbage
+collector (<a class="uref" href="https://www.hboehm.info/gc/">https://www.hboehm.info/gc/</a>).
+</p>
+<p>This library needs to be available for each multilib variant, unless
+configured with <samp class="option">--enable-algol68-gc=&lsquo;<samp class="samp">auto</samp>&rsquo;</samp> in which case
+the build of the additional runtime library is skipped when not
+available and the build continues.
+</p>
+</dd>
+<dt><code class="code">--with-target-bdw-gc=<var class="var">list</var></code></dt>
+<dt><code class="code">--with-target-bdw-gc-include=<var class="var">list</var></code></dt>
+<dt><code class="code">--with-target-bdw-gc-lib=<var class="var">list</var></code></dt>
+<dd><p>Specify search directories for the garbage collector header files and
+libraries. <var class="var">list</var> is a comma separated list of key value pairs of the
+form &lsquo;<samp class="samp"><var class="var">multilibdir</var>=<var class="var">path</var></samp>&rsquo;, where the default multilib key
+is named as &lsquo;<samp class="samp">.</samp>&rsquo; (dot), or is omitted (e.g.
+&lsquo;<samp class="samp">--with-target-bdw-gc=/opt/bdw-gc,32=/opt-bdw-gc32</samp>&rsquo;).
+</p>
+<p>The options <samp class="option">--with-target-bdw-gc-include</samp> and
+<samp class="option">--with-target-bdw-gc-lib</samp> must always be specified together
+for each multilib variant and they take precedence over
+<samp class="option">--with-target-bdw-gc</samp>.  If <samp class="option">--with-target-bdw-gc-include</samp>
+is missing values for a multilib, then the value for the default
+multilib is used (e.g. &lsquo;<samp class="samp">--with-target-bdw-gc-include=/opt/bdw-gc/include</samp>&rsquo;
+&lsquo;<samp class="samp">--with-target-bdw-gc-lib=/opt/bdw-gc/lib64,32=/opt-bdw-gc/lib32</samp>&rsquo;).
+If none of these options are specified, the library is assumed in
+default locations.
+</p></dd>
+</dl>
+
 <h4 class="subheading" id="Objective-C-Specific-Options"><span>Objective-C-Specific Options<a class="copiable-link" href="#Objective-C-Specific-Options"> &para;</a></span></h4>
 
 <p>The following options apply to the build of the Objective-C runtime library.
@@ -2453,6 +2544,32 @@ When the option is specified without a <var class="var">choice</var>,  the resul
 to be available for each multilib variant, unless configured with
 <samp class="option">--with-target-system-zlib=&lsquo;<samp class="samp">auto</samp>&rsquo;</samp> in which case the GCC&nbsp;included
 &lsquo;<samp class="samp">zlib</samp>&rsquo; is only used when the system installed library is not available.
+</p></dd>
+</dl>
+
+<h4 class="subheading" id="COBOL-Specific-Options"><span>COBOL-Specific Options<a class="copiable-link" href="#COBOL-Specific-Options"> &para;</a></span></h4>
+
+<p>The following options apply to the build of the COBOL runtime library.
+</p>
+<dl class="table">
+<dt><code class="code">--with-target-libxml2=<var class="var">list</var></code></dt>
+<dt><code class="code">--with-target-libxml2-include=<var class="var">list</var></code></dt>
+<dt><code class="code">--with-target-libxml2-lib=<var class="var">list</var></code></dt>
+<dd><p>Specify search directories for the libxml2 header files and
+libraries.  <var class="var">list</var> is a comma separated list of key value pairs of the
+form &lsquo;<samp class="samp"><var class="var">multilibdir</var>=<var class="var">path</var></samp>&rsquo;, where the default multilib key
+is named as &lsquo;<samp class="samp">.</samp>&rsquo; (dot), or is omitted (e.g.
+&lsquo;<samp class="samp">--with-target-libxml2=/opt/libxml2,32=/opt-libxml2-32</samp>&rsquo;).
+</p>
+<p>The options <samp class="option">--with-target-libxml2-include</samp> and
+<samp class="option">--with-target-libxml2-lib</samp> must always be specified together
+for each multilib variant and they take precedence over
+<samp class="option">--with-target-libxml2</samp>.  If <samp class="option">--with-target-libxml2-include</samp>
+is missing values for a multilib, then the value for the default
+multilib is used (e.g. &lsquo;<samp class="samp">--with-target-libxml2-include=/opt/libxml2/include</samp>&rsquo;
+&lsquo;<samp class="samp">--with-target-libxml2-lib=/opt/libxml2/lib64,32=/opt-libxml2/lib32</samp>&rsquo;).
+If none of these options are specified, the library is assumed in
+default locations.
 </p></dd>
 </dl>
 
