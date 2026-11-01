@@ -1065,8 +1065,10 @@ _GLIBCXX_BEGIN_NAMESPACE_CONTAINER
 	       _CharT __zero = _CharT('0'), _CharT __one = _CharT('1'))
         : _Base()
         {
+#if _GLIBCXX_HOSTED
 	  if (!__str)
 	    __throw_logic_error(__N("bitset::bitset(const _CharT*, ...)"));
+#endif
 	  using _Traits = typename __bitset::__string<_CharT>::traits_type;
 
 	  if (__n == __bitset::__string<_CharT>::npos)
