@@ -8,5 +8,5 @@ void foo (decltype (auto (T ())) x) {}	// { dg-warning "'auto\\\(x\\\)' only ava
 int
 main ()
 {
-  foo <int> (1);
+  foo <int> (1);			// { dg-error "no matching function for call to 'foo<int>\\\(int\\\)'" "" { target c++20_down } }
 }

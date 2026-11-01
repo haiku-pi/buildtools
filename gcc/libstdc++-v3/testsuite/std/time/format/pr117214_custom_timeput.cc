@@ -14,7 +14,7 @@ struct custom_time_put : std::time_put<char>
     using Base = std::time_put<char>;
 
     switch (format) {
-      case 'a': case 'A': case 'b': case 'B': case 'p':
+	case 'a': case 'A': case 'b': case 'h': case 'B': case 'p':
 	*out++ = '[';
 	*out++ = format;
 	*out++ = ']';
@@ -31,6 +31,7 @@ int main()
   test(Monday,  "{:L%a}", "[a]Mon");
   test(Monday,  "{:L%A}", "[A]Monday");
   test(January, "{:L%b}", "[b]Jan");
+  test(January, "{:L%h}", "[h]Jan");
   test(January, "{:L%B}", "[B]January");
   test(1h,      "{:L%p}", "[p]AM");
 }

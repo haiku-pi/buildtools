@@ -1,6 +1,6 @@
 // <forward_list.h> -*- C++ -*-
 
-// Copyright (C) 2008-2025 Free Software Foundation, Inc.
+// Copyright (C) 2008-2026 Free Software Foundation, Inc.
 //
 // This file is part of the GNU ISO C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
@@ -1461,7 +1461,7 @@ namespace __fwdlist
        *
        *  This function will insert copies of the data in the range
        *  `[ __first, __last)` into the %forward_list after the
-       *  location specified by `__pos.
+       *  location specified by `__pos`.
        *
        *  This operation is linear in the number of elements inserted and
        *  does not invalidate iterators and references.

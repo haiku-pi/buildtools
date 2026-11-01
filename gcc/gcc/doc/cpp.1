@@ -58,7 +58,7 @@
 .\" ========================================================================
 .\"
 .IX Title "CPP 1"
-.TH CPP 1 2026-06-12 gcc-15.3.0 GNU
+.TH CPP 1 2026-08-07 gcc-16.2.0 GNU
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -152,9 +152,21 @@ options may \fInot\fR be grouped: \fB\-dM\fR is very different from
 \&\fB\-d\ \-M\fR.
 .IP "\fB\-D\fR \fIname\fR" 4
 .IX Item "-D name"
+.PD 0
+.IP \fB\-\-define\-macro=\fR\fIname\fR 4
+.IX Item "--define-macro=name"
+.IP "\fB\-\-define\-macro\fR \fIname\fR" 4
+.IX Item "--define-macro name"
+.PD
 Predefine \fIname\fR as a macro, with definition \f(CW1\fR.
 .IP "\fB\-D\fR \fIname\fR\fB=\fR\fIdefinition\fR" 4
 .IX Item "-D name=definition"
+.PD 0
+.IP \fB\-\-define\-macro=\fR\fIname\fR\fB=\fR\fIdefinition\fR 4
+.IX Item "--define-macro=name=definition"
+.IP "\fB\-\-define\-macro\fR \fIname\fR\fB=\fR\fIdefinition\fR" 4
+.IX Item "--define-macro name=definition"
+.PD
 The contents of \fIdefinition\fR are tokenized and processed as if
 they appeared during translation phase three in a \fB#define\fR
 directive.  In particular, the definition is truncated by
@@ -176,10 +188,22 @@ are given on the command line.  All \fB\-imacros\fR \fIfile\fR and
 \&\fB\-D\fR and \fB\-U\fR options.
 .IP "\fB\-U\fR \fIname\fR" 4
 .IX Item "-U name"
+.PD 0
+.IP \fB\-\-undefine\-macro=\fR\fIname\fR 4
+.IX Item "--undefine-macro=name"
+.IP "\fB\-\-undefine\-macro\fR \fIname\fR" 4
+.IX Item "--undefine-macro name"
+.PD
 Cancel any previous definition of \fIname\fR, either built in or
 provided with a \fB\-D\fR option.
 .IP "\fB\-include\fR \fIfile\fR" 4
 .IX Item "-include file"
+.PD 0
+.IP \fB\-\-include=\fR\fIfile\fR 4
+.IX Item "--include=file"
+.IP "\fB\-\-include\fR \fIfile\fR" 4
+.IX Item "--include file"
+.PD
 Process \fIfile\fR as if \f(CW\*(C`#include "file"\*(C'\fR appeared as the first
 line of the primary source file.  However, the first directory searched
 for \fIfile\fR is the preprocessor\*(Aqs working directory \fIinstead of\fR
@@ -191,6 +215,12 @@ If multiple \fB\-include\fR options are given, the files are included
 in the order they appear on the command line.
 .IP "\fB\-imacros\fR \fIfile\fR" 4
 .IX Item "-imacros file"
+.PD 0
+.IP \fB\-\-imacros=\fR\fIfile\fR 4
+.IX Item "--imacros=file"
+.IP "\fB\-\-imacros\fR \fIfile\fR" 4
+.IX Item "--imacros file"
+.PD
 Exactly like \fB\-include\fR, except that any output produced by
 scanning \fIfile\fR is thrown away.  Macros it defines remain defined.
 This allows you to acquire all the macros from a header without also
@@ -210,6 +240,10 @@ This option is supported on GNU/Linux targets, most other Unix derivatives,
 and also on x86 Cygwin and MinGW targets.
 .IP \fB\-M\fR 4
 .IX Item "-M"
+.PD 0
+.IP \fB\-\-dependencies\fR 4
+.IX Item "--dependencies"
+.PD
 Instead of outputting the result of preprocessing, output a rule
 suitable for \fBmake\fR describing the dependencies of the main
 source file.  The preprocessor outputs one \fBmake\fR rule containing
@@ -235,6 +269,10 @@ Passing \fB\-M\fR to the driver implies \fB\-E\fR, and suppresses
 warnings with an implicit \fB\-w\fR.
 .IP \fB\-MM\fR 4
 .IX Item "-MM"
+.PD 0
+.IP \fB\-\-user\-dependencies\fR 4
+.IX Item "--user-dependencies"
+.PD
 Like \fB\-M\fR but do not mention header files that are found in
 system header directories, nor header files that are included,
 directly or indirectly, from such a header.
@@ -255,6 +293,10 @@ When used with the driver options \fB\-MD\fR or \fB\-MMD\fR,
 If \fIfile\fR is \fI\-\fR, then the dependencies are written to \fIstdout\fR.
 .IP \fB\-MG\fR 4
 .IX Item "-MG"
+.PD 0
+.IP \fB\-\-print\-missing\-file\-dependencies\fR 4
+.IX Item "--print-missing-file-dependencies"
+.PD
 In conjunction with an option such as \fB\-M\fR requesting
 dependency generation, \fB\-MG\fR assumes missing header files are
 generated files and adds them to the dependency list without raising
@@ -310,6 +352,10 @@ The default target is automatically quoted, as if it were given with
 \&\fB\-MQ\fR.
 .IP \fB\-MD\fR 4
 .IX Item "-MD"
+.PD 0
+.IP \fB\-\-write\-dependencies\fR 4
+.IX Item "--write-dependencies"
+.PD
 \&\fB\-MD\fR is equivalent to \fB\-M \-MF\fR \fIfile\fR, except that
 \&\fB\-E\fR is not implied.  The driver determines \fIfile\fR based on
 whether an \fB\-o\fR option is given.  If it is, the driver uses its
@@ -325,6 +371,10 @@ Since \fB\-E\fR is not implied, \fB\-MD\fR can be used to generate
 a dependency output file as a side effect of the compilation process.
 .IP \fB\-MMD\fR 4
 .IX Item "-MMD"
+.PD 0
+.IP \fB\-\-write\-user\-dependencies\fR 4
+.IX Item "--write-user-dependencies"
+.PD
 Like \fB\-MD\fR except mention only user header files, not system
 header files.
 .IP \fB\-fpreprocessed\fR 4
@@ -441,12 +491,16 @@ problems with encodings that do not fit exactly in \f(CW\*(C`wchar_t\*(C'\fR.
 .IP \fB\-finput\-charset=\fR\fIcharset\fR 4
 .IX Item "-finput-charset=charset"
 Set the input character set, used for translation from the character
-set of the input file to the source character set used by GCC.  If the
-locale does not specify, or GCC cannot get this information from the
-locale, the default is UTF\-8.  This can be overridden by either the locale
-or this command\-line option.  Currently the command\-line option takes
-precedence if there\*(Aqs a conflict.  \fIcharset\fR can be any encoding
+set of the input file to the source character set used by GCC.  The
+default is UTF\-8.  \fIcharset\fR can be any encoding
 supported by the system\*(Aqs \f(CW\*(C`iconv\*(C'\fR library routine.
+.Sp
+If the input character set is UTF\-8, warnings about ill\-formed code
+unit sequences are issued if \fB\-Winvalid\-utf8\fR is enabled.
+Otherwise no diagnostics are issued when the input character set
+matches the execution character set.  If they are different,
+ill\-formed code unit sequences result in an error during transcoding
+to the execution character set.
 .IP \fB\-fworking\-directory\fR 4
 .IX Item "-fworking-directory"
 Enable generation of linemarkers in the preprocessor output that
@@ -463,16 +517,35 @@ present in the command line, this option has no effect, since no
 \&\f(CW\*(C`#line\*(C'\fR directives are emitted whatsoever.
 .IP "\fB\-A\fR \fIpredicate\fR\fB=\fR\fIanswer\fR" 4
 .IX Item "-A predicate=answer"
+.PD 0
+.IP "\fB\-\-assert\fR \fIpredicate\fR\fB=\fR\fIanswer\fR" 4
+.IX Item "--assert predicate=answer"
+.IP \fB\-\-assert=\fR\fIpredicate\fR\fB=\fR\fIanswer\fR 4
+.IX Item "--assert=predicate=answer"
+.PD
 Make an assertion with the predicate \fIpredicate\fR and answer
 \&\fIanswer\fR.  This form is preferred to the older form \fB\-A\fR
 \&\fIpredicate\fR\fB(\fR\fIanswer\fR\fB)\fR, which is still supported, because
 it does not use shell special characters.
+.Sp
+Assertions are an obsolete feature of the preprocessor, supported only
+for compatibility with legacy system headers on some targets.
 .IP "\fB\-A \-\fR\fIpredicate\fR\fB=\fR\fIanswer\fR" 4
 .IX Item "-A -predicate=answer"
+.PD 0
+.IP "\fB\-\-assert \-\fR\fIpredicate\fR\fB=\fR\fIanswer\fR" 4
+.IX Item "--assert -predicate=answer"
+.IP \fB\-\-assert=\-\fR\fIpredicate\fR\fB=\fR\fIanswer\fR 4
+.IX Item "--assert=-predicate=answer"
+.PD
 Cancel an assertion with the predicate \fIpredicate\fR and answer
 \&\fIanswer\fR.
 .IP \fB\-C\fR 4
 .IX Item "-C"
+.PD 0
+.IP \fB\-\-comments\fR 4
+.IX Item "--comments"
+.PD
 Do not discard comments.  All comments are passed through to the output
 file, except for comments in processed directives, which are deleted
 along with the directive.
@@ -484,6 +557,10 @@ directive line have the effect of turning that line into an ordinary
 source line, since the first token on the line is no longer a \fB#\fR.
 .IP \fB\-CC\fR 4
 .IX Item "-CC"
+.PD 0
+.IP \fB\-\-comments\-in\-macros\fR 4
+.IX Item "--comments-in-macros"
+.PD
 Do not discard comments, including during macro expansion.  This is
 like \fB\-C\fR, except that comments contained within macros are
 also passed through to the output file where the macro is expanded.
@@ -497,6 +574,10 @@ the source line.
 The \fB\-CC\fR option is generally used to support lint comments.
 .IP \fB\-P\fR 4
 .IX Item "-P"
+.PD 0
+.IP \fB\-\-no\-line\-commands\fR 4
+.IX Item "--no-line-commands"
+.PD
 Inhibit generation of linemarkers in the output from the preprocessor.
 This might be useful when running the preprocessor on something that is
 not C code, and will be sent to a program which might be confused by the
@@ -504,8 +585,12 @@ linemarkers.
 .IP \fB\-traditional\fR 4
 .IX Item "-traditional"
 .PD 0
+.IP \fB\-\-traditional\fR 4
+.IX Item "--traditional"
 .IP \fB\-traditional\-cpp\fR 4
 .IX Item "-traditional-cpp"
+.IP \fB\-\-traditional\-cpp\fR 4
+.IX Item "--traditional-cpp"
 .PD
 Try to imitate the behavior of pre\-standard C preprocessors, as
 opposed to ISO C preprocessors.
@@ -515,6 +600,10 @@ C compiler, and these options are only supported with the \fB\-E\fR
 switch, or when invoking CPP explicitly.
 .IP \fB\-trigraphs\fR 4
 .IX Item "-trigraphs"
+.PD 0
+.IP \fB\-\-trigraphs\fR 4
+.IX Item "--trigraphs"
+.PD
 Support ISO C trigraphs.
 These are three\-character sequences, all starting with \fB??\fR, that
 are defined by ISO C to stand for single characters.  For example,
@@ -530,6 +619,10 @@ Enable special code to work around file systems which only permit very
 short file names, such as MS\-DOS.
 .IP \fB\-H\fR 4
 .IX Item "-H"
+.PD 0
+.IP \fB\-\-trace\-includes\fR 4
+.IX Item "--trace-includes"
+.PD
 Print the name of each header file used, in addition to other normal
 activities.  Each name is indented to show how deep in the
 \&\fB#include\fR stack it is.  Precompiled header files are also
@@ -537,6 +630,12 @@ printed, even if they are found to be invalid; an invalid precompiled
 header file is printed with \fB...x\fR and a valid one with \fB...!\fR .
 .IP \fB\-d\fR\fIletters\fR 4
 .IX Item "-dletters"
+.PD 0
+.IP \fB\-\-dump=\fR\fIletters\fR 4
+.IX Item "--dump=letters"
+.IP "\fB\-\-dump\fR \fIletters\fR" 4
+.IX Item "--dump letters"
+.PD
 Says to make debugging dumps during compilation as specified by
 \&\fIletters\fR.  The flags documented here are those relevant to the
 preprocessor.  Other \fIletters\fR are interpreted
@@ -546,6 +645,10 @@ conflicts, the result is undefined.
 .RS 4
 .IP \fB\-dM\fR 4
 .IX Item "-dM"
+.PD 0
+.IP \fB\-\-dump=M\fR 4
+.IX Item "--dump=M"
+.PD
 Instead of the normal output, generate a list of \fB#define\fR
 directives for all the macros defined during the execution of the
 preprocessor, including predefined macros.  This gives you a way of
@@ -559,18 +662,34 @@ Assuming you have no file \fIfoo.h\fR, the command
 shows all the predefined macros.
 .IP \fB\-dD\fR 4
 .IX Item "-dD"
+.PD 0
+.IP \fB\-\-dump=D\fR 4
+.IX Item "--dump=D"
+.PD
 Like \fB\-dM\fR except that it outputs \fIboth\fR the \fB#define\fR
 directives and the result of preprocessing.  Both kinds of output go to
 the standard output file.
 .IP \fB\-dN\fR 4
 .IX Item "-dN"
+.PD 0
+.IP \fB\-\-dump=N\fR 4
+.IX Item "--dump=N"
+.PD
 Like \fB\-dD\fR, but emit only the macro names, not their expansions.
 .IP \fB\-dI\fR 4
 .IX Item "-dI"
+.PD 0
+.IP \fB\-\-dump=I\fR 4
+.IX Item "--dump=I"
+.PD
 Output \fB#include\fR directives in addition to the result of
 preprocessing.
 .IP \fB\-dU\fR 4
 .IX Item "-dU"
+.PD 0
+.IP \fB\-\-dump=U\fR 4
+.IX Item "--dump=U"
+.PD
 Like \fB\-dD\fR except that only macros that are expanded, or whose
 definedness is tested in preprocessor directives, are output; the
 output is delayed until the use or test of the macro; and
@@ -596,9 +715,19 @@ When used from GCC without \fB\-E\fR, this option has no effect.
 .IX Item "-isystem dir"
 .IP "\fB\-idirafter\fR \fIdir\fR" 4
 .IX Item "-idirafter dir"
+.IP \fB\-\-include\-directory\-after=\fR\fIdir\fR 4
+.IX Item "--include-directory-after=dir"
+.IP "\fB\-\-include\-directory\-after\fR \fIdir\fR" 4
+.IX Item "--include-directory-after dir"
+.IP \fB\-\-include\-directory=\fR\fIdir\fR 4
+.IX Item "--include-directory=dir"
+.IP "\fB\-\-include\-directory\fR \fIdir\fR" 4
+.IX Item "--include-directory dir"
 .PD
 Add the directory \fIdir\fR to the list of directories to be searched
-for header files during preprocessing.
+for header files during preprocessing.  \fB\-\-include\-directory\fR
+is an alias for \fB\-I\fR, while \fB\-\-include\-directory\-after\fR
+is an alias for \fB\-idirafter\fR.
 .Sp
 If \fIdir\fR begins with \fB=\fR or \f(CW$SYSROOT\fR, then the \fB=\fR
 or \f(CW$SYSROOT\fR is replaced by the sysroot prefix; see
@@ -665,6 +794,10 @@ use the \fB\-nostdinc\fR and/or \fB\-isystem\fR options.
 .RE
 .IP \fB\-I\-\fR 4
 .IX Item "-I-"
+.PD 0
+.IP \fB\-\-include\-barrier\fR 4
+.IX Item "--include-barrier"
+.PD
 Split the include path.
 This option has been deprecated.  Please use \fB\-iquote\fR instead for
 \&\fB\-I\fR directories before the \fB\-I\-\fR and remove the \fB\-I\-\fR
@@ -681,6 +814,12 @@ In addition, \fB\-I\-\fR inhibits the use of the directory of the current
 file directory as the first search directory for \f(CW\*(C`#include\ "\fR\f(CIfile\fR\f(CW"\*(C'\fR.  There is no way to override this effect of \fB\-I\-\fR.
 .IP "\fB\-iprefix\fR \fIprefix\fR" 4
 .IX Item "-iprefix prefix"
+.PD 0
+.IP \fB\-\-include\-prefix=\fR\fIprefix\fR 4
+.IX Item "--include-prefix=prefix"
+.IP "\fB\-\-include\-prefix\fR \fIprefix\fR" 4
+.IX Item "--include-prefix prefix"
+.PD
 Specify \fIprefix\fR as the prefix for subsequent \fB\-iwithprefix\fR
 options.  If the prefix represents a directory, you should include the
 final \fB/\fR.
@@ -689,11 +828,28 @@ final \fB/\fR.
 .PD 0
 .IP "\fB\-iwithprefixbefore\fR \fIdir\fR" 4
 .IX Item "-iwithprefixbefore dir"
+.IP \fB\-\-include\-with\-prefix=\fR\fIprefix\fR 4
+.IX Item "--include-with-prefix=prefix"
+.IP "\fB\-\-include\-with\-prefix\fR \fIprefix\fR" 4
+.IX Item "--include-with-prefix prefix"
+.IP \fB\-\-include\-with\-prefix\-after=\fR\fIprefix\fR 4
+.IX Item "--include-with-prefix-after=prefix"
+.IP "\fB\-\-include\-with\-prefix\-after\fR \fIprefix\fR" 4
+.IX Item "--include-with-prefix-after prefix"
+.IP \fB\-\-include\-with\-prefix\-before=\fR\fIprefix\fR 4
+.IX Item "--include-with-prefix-before=prefix"
+.IP "\fB\-\-include\-with\-prefix\-before\fR \fIprefix\fR" 4
+.IX Item "--include-with-prefix-before prefix"
 .PD
 Append \fIdir\fR to the prefix specified previously with
 \&\fB\-iprefix\fR, and add the resulting directory to the include search
 path.  \fB\-iwithprefixbefore\fR puts it in the same place \fB\-I\fR
 would; \fB\-iwithprefix\fR puts it where \fB\-idirafter\fR would.
+.Sp
+\&\fB\-\-include\-with\-prefix\fR and \fB\-\-include\-with\-prefix\-after\fR are
+both aliases for \fB\-iwithprefix\fR, while
+\&\fB\-\-include\-with\-prefix\-before\fR is an alias for
+\&\fB\-iwithprefixbefore\fR.
 .IP "\fB\-isysroot\fR \fIdir\fR" 4
 .IX Item "-isysroot dir"
 This option is like the \fB\-\-sysroot\fR option, but applies only to
@@ -704,8 +860,16 @@ information.
 .IX Item "-imultilib dir"
 Use \fIdir\fR as a subdirectory of the directory containing
 target\-specific C++ headers.
+.IP "\fB\-imultiarch\fR \fIdir\fR" 4
+.IX Item "-imultiarch dir"
+Use \fIdir\fR as a subdirectory of the directory containing
+architecture\-specific C++ headers.
 .IP \fB\-nostdinc\fR 4
 .IX Item "-nostdinc"
+.PD 0
+.IP \fB\-\-no\-standard\-includes\fR 4
+.IX Item "--no-standard-includes"
+.PD
 Do not search the standard system directories for header files.
 Only the directories explicitly specified with \fB\-I\fR,
 \&\fB\-iquote\fR, \fB\-isystem\fR, and/or \fB\-idirafter\fR
@@ -718,6 +882,12 @@ but do still search the other standard directories.  (This option is
 used when building the C++ library.)
 .IP \fB\-\-embed\-dir=\fR\fIdir\fR 4
 .IX Item "--embed-dir=dir"
+.PD 0
+.IP \fB\-\-embed\-directory=\fR\fIdir\fR 4
+.IX Item "--embed-directory=dir"
+.IP "\fB\-\-embed\-directory\fR \fIdir\fR" 4
+.IX Item "--embed-directory dir"
+.PD
 Append \fIdir\fR directory to the list of searched directories for
 \&\f(CW\*(C`#embed\*(C'\fR preprocessing directive or \f(CW\*(C`_\|_has_embed\*(C'\fR macro.
 There are no default directories for \f(CW\*(C`#embed\*(C'\fR.
@@ -875,7 +1045,7 @@ process.
 \&\fBgcc\fR\|(1), and the Info entries for \fIcpp\fR and \fIgcc\fR.
 .SH COPYRIGHT
 .IX Header "COPYRIGHT"
-Copyright (c) 1987\-2025 Free Software Foundation, Inc.
+Copyright (c) 1987\-2026 Free Software Foundation, Inc.
 .PP
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3 or

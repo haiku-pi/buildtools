@@ -1,5 +1,5 @@
 /* Subroutines used to expand string operations for RISC-V.
-   Copyright (C) 2023-2025 Free Software Foundation, Inc.
+   Copyright (C) 2023-2026 Free Software Foundation, Inc.
 
    This file is part of GCC.
 
@@ -923,6 +923,10 @@ riscv_expand_block_move_scalar (rtx dest, rtx src, rtx length)
   unsigned HOST_WIDE_INT hwi_length = UINTVAL (length);
   unsigned HOST_WIDE_INT factor, align;
 
+  if (riscv_memcpy_size_threshold >= 0
+      && hwi_length > (unsigned HOST_WIDE_INT) riscv_memcpy_size_threshold)
+    return false;
+
   if (riscv_slow_unaligned_access_p)
     {
       align = MIN (MIN (MEM_ALIGN (src), MEM_ALIGN (dest)), BITS_PER_WORD);
@@ -1091,13 +1095,17 @@ use_vector_stringop_p (struct stringop_info &info, HOST_WIDE_INT max_ew,
 	  || known_lt (INTVAL (length_in), BYTES_PER_RISCV_VECTOR)))
       return false;
 
+  int max_lmul = TARGET_MAX_LMUL;
+  if (rvv_max_lmul == RVV_CONV_DYNAMIC)
+    max_lmul = RVV_M1;
+
   if (CONST_INT_P (length_in))
     {
       HOST_WIDE_INT length = INTVAL (length_in);
 
       /* If the VLEN and preferred LMUL allow the entire block to be copied in
 	 one go then no loop is needed.  */
-      if (known_le (length, BYTES_PER_RISCV_VECTOR * TARGET_MAX_LMUL))
+      if (known_le (length, BYTES_PER_RISCV_VECTOR * max_lmul))
 	{
 	  need_loop = false;
 
@@ -1132,10 +1140,10 @@ use_vector_stringop_p (struct stringop_info &info, HOST_WIDE_INT max_ew,
 	  poly_int64 nunits;
 
 	  if (need_loop)
-	    per_iter = BYTES_PER_RISCV_VECTOR * TARGET_MAX_LMUL;
+	    per_iter = BYTES_PER_RISCV_VECTOR * max_lmul;
 	  else
 	    per_iter = length;
-	  /* BYTES_PER_RISCV_VECTOR * TARGET_MAX_LMUL may not be divisible by
+	  /* BYTES_PER_RISCV_VECTOR * MAX_LMUL may not be divisible by
 	     this potential_ew.  */
 	  if (!multiple_p (per_iter, potential_ew, &nunits))
 	    continue;
@@ -1166,7 +1174,7 @@ use_vector_stringop_p (struct stringop_info &info, HOST_WIDE_INT max_ew,
 		 pointless.
 		 Still, by choosing a lower LMUL factor that still allows
 		 an entire transfer, we can reduce register pressure.  */
-	      for (unsigned lmul = 1; lmul < TARGET_MAX_LMUL; lmul <<= 1)
+	      for (int lmul = 1; lmul < max_lmul; lmul <<= 1)
 		if (known_le (length * BITS_PER_UNIT, TARGET_MIN_VLEN * lmul)
 		    && multiple_p (BYTES_PER_RISCV_VECTOR * lmul, potential_ew,
 				   &mode_units)
@@ -1179,9 +1187,9 @@ use_vector_stringop_p (struct stringop_info &info, HOST_WIDE_INT max_ew,
 	  if (vmode != VOIDmode)
 	    break;
 
-	  /* BYTES_PER_RISCV_VECTOR * TARGET_MAX_LMUL will at least be divisible
+	  /* BYTES_PER_RISCV_VECTOR * MAX_LMUL will at least be divisible
 	     by potential_ew 1, so this should succeed eventually.  */
-	  if (multiple_p (BYTES_PER_RISCV_VECTOR * TARGET_MAX_LMUL,
+	  if (multiple_p (BYTES_PER_RISCV_VECTOR * max_lmul,
 			  potential_ew, &mode_units)
 	      && riscv_vector::get_vector_mode (elem_mode,
 						mode_units).exists (&vmode))
@@ -1197,7 +1205,7 @@ use_vector_stringop_p (struct stringop_info &info, HOST_WIDE_INT max_ew,
     }
   else
     {
-      gcc_assert (get_lmul_mode (QImode, TARGET_MAX_LMUL).exists (&vmode));
+      gcc_assert (get_lmul_mode (QImode, max_lmul).exists (&vmode));
     }
 
   /* A memcpy libcall in the worst case takes 3 instructions to prepare the
@@ -1237,6 +1245,21 @@ expand_block_move (rtx dst_in, rtx src_in, rtx length_in, bool movmem_p)
        / BITS_PER_UNIT);
 
   if (!use_vector_stringop_p (info, potential_ew, length_in))
+    return false;
+
+  if (CONST_INT_P (length_in))
+    {
+      HOST_WIDE_INT length = INTVAL (length_in);
+      if (movmem_p
+	  && riscv_memmove_size_threshold >= 0
+	  && length > riscv_memmove_size_threshold)
+	return false;
+      else if (!movmem_p
+	       && riscv_memmove_size_threshold >= 0
+	       && length > riscv_memcpy_size_threshold)
+	return false;
+    }
+  else if (riscv_memmove_size_threshold != -1)
     return false;
 
   /* Inlining general memmove is a pessimisation: we can't avoid having to
@@ -1343,6 +1366,8 @@ expand_rawmemchr (machine_mode mode, rtx dst, rtx haystack, rtx needle,
 
   unsigned int isize = GET_MODE_SIZE (mode).to_constant ();
   int lmul = TARGET_MAX_LMUL;
+  if (rvv_max_lmul == RVV_CONV_DYNAMIC)
+    lmul = RVV_M1;
   poly_int64 nunits = exact_div (BYTES_PER_RISCV_VECTOR * lmul, isize);
 
   machine_mode vmode;
@@ -1439,6 +1464,8 @@ expand_strcmp (rtx result, rtx src1, rtx src2, rtx nbytes,
   machine_mode mode = E_QImode;
   unsigned int isize = GET_MODE_SIZE (mode).to_constant ();
   int lmul = TARGET_MAX_LMUL;
+  if (rvv_max_lmul == RVV_CONV_DYNAMIC)
+    lmul = RVV_M1;
   poly_int64 nunits = exact_div (BYTES_PER_RISCV_VECTOR * lmul, isize);
 
   machine_mode vmode;
@@ -1591,7 +1618,9 @@ check_vectorise_memory_operation (rtx length_in, HOST_WIDE_INT &lmul_out)
   if (rvv_max_lmul != RVV_DYNAMIC)
     {
       lmul_out = TARGET_MAX_LMUL;
-      return (length <= ((TARGET_MAX_LMUL * TARGET_MIN_VLEN) / 8));
+      if (rvv_max_lmul == RVV_CONV_DYNAMIC)
+	lmul_out = RVV_M1;
+      return (length <= ((lmul_out * TARGET_MIN_VLEN) / 8));
     }
 
   /* Find smallest lmul large enough for entire op.  */
@@ -1619,6 +1648,16 @@ expand_vec_setmem (rtx dst_in, rtx length_in, rtx fill_value_in)
   if (!use_vector_stringop_p (info, 1, length_in) || info.need_loop)
     return false;
 
+  if (CONST_INT_P (length_in))
+    {
+      HOST_WIDE_INT length = INTVAL (length_in);
+      if (riscv_memset_size_threshold >= 0
+	  && length > riscv_memset_size_threshold)
+	return false;
+    }
+  else if (riscv_memset_size_threshold != -1)
+    return false;
+
   rtx dst_addr = copy_addr_to_reg (XEXP (dst_in, 0));
   rtx dst = change_address (dst_in, info.vmode, dst_addr);
 
@@ -1629,16 +1668,14 @@ expand_vec_setmem (rtx dst_in, rtx length_in, rtx fill_value_in)
      Otherwise, use a predicated store.  */
   if (known_eq (GET_MODE_SIZE (info.vmode), INTVAL (info.avl)))
     {
-      emit_vlmax_insn (code_for_pred_broadcast (info.vmode), UNARY_OP,
-		       broadcast_ops);
+      riscv_vector::expand_broadcast (info.vmode, broadcast_ops);
       emit_move_insn (dst, fill_value);
     }
   else
     {
       if (!satisfies_constraint_vl (info.avl))
 	info.avl = force_reg (Pmode, info.avl);
-      emit_nonvlmax_insn (code_for_pred_broadcast (info.vmode),
-			  riscv_vector::UNARY_OP, broadcast_ops, info.avl);
+      riscv_vector::expand_broadcast (info.vmode, broadcast_ops, info.avl);
       machine_mode mask_mode
 	= riscv_vector::get_vector_mode (BImode, GET_MODE_NUNITS (info.vmode))
 	  .require ();

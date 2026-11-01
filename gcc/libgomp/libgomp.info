@@ -1,7 +1,7 @@
 This is libgomp.info, produced by makeinfo version 7.1 from
 libgomp.texi.
 
-Copyright © 2006-2025 Free Software Foundation, Inc.
+Copyright © 2006-2026 Free Software Foundation, Inc.
 
    Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3 or
@@ -33,7 +33,7 @@ C/C++ and Fortran.
    Published by the Free Software Foundation 51 Franklin Street, Fifth
 Floor Boston, MA 02110-1301 USA
 
-   Copyright © 2006-2025 Free Software Foundation, Inc.
+   Copyright © 2006-2026 Free Software Foundation, Inc.
 
    Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3 or
@@ -145,10 +145,11 @@ File: libgomp.info,  Node: OpenMP Implementation Status,  Next: Runtime Library 
 * OpenMP 5.1:: Feature completion status to 5.1 specification
 * OpenMP 5.2:: Feature completion status to 5.2 specification
 * OpenMP 6.0:: Feature completion status to 6.0 specification
+* OpenMP Technical Report 14:: Feature completion status to first 6.1 preview
 
 The ‘_OPENMP’ preprocessor macro and Fortran's ‘openmp_version’
 parameter, provided by ‘omp_lib.h’ and the ‘omp_lib’ module, have the
-value ‘201511’ (i.e.  OpenMP 4.5).
+value ‘202111’ (i.e.  OpenMP 5.2).
 
 
 File: libgomp.info,  Node: OpenMP 4.5,  Next: OpenMP 5.0,  Up: OpenMP Implementation Status
@@ -222,11 +223,7 @@ Memory management routines                  Y
 ‘allocate’ directive                        P       C++ unsupported;
                                                     see also
                                                     *note Memory allocation::
-‘allocate’ clause                           P       Clause has no
-                                                    effect on
-                                                    ‘target’
-                                                    (PR113436
-                                                    (https://gcc.gnu.org/PR113436))
+‘allocate’ clause                           Y
 ‘use_device_addr’ clause on ‘target data’   Y
 ‘ancestor’ modifier on ‘device’ clause      Y
 Implicit declare target directive           Y
@@ -256,7 +253,9 @@ Mapping of Fortran pointer and              Y
 allocatable variables, including pointer
 and allocatable components of variables
 ‘defaultmap’ extensions                     Y
-‘declare mapper’ directive                  N
+‘declare mapper’ directive                  P       Initial support
+                                                    and for C/C++,
+                                                    only
 ‘omp_get_supported_active_levels’ routine   Y
 Runtime routines and environment            Y
 variables to display runtime thread
@@ -291,8 +290,10 @@ specifiers
 _target_device trait_ in OpenMP Context     Y
 ‘target_device’ selector set in context     Y
 selectors
-C/C++'s ‘declare variant’ directive:        N
-elision support of preprocessed code
+C/C++'s delimited ‘declare variant’         Y
+directive: support elision of
+preprocessed code and interpret enclosed
+function definitions as variant functions
 ‘declare variant’: new clauses              Y
 ‘adjust_args’ and ‘append_args’
 ‘dispatch’ construct                        Y
@@ -314,8 +315,8 @@ construct
 construct
 ‘has_device_addr’ clause to ‘target’        Y
 construct
-Iterators in ‘target update’ motion         N
-clauses and ‘map’ clauses
+Iterators in ‘target update’ motion         P       Limited support
+clauses and ‘map’ clauses                           for C/C++
 Indirect calls to the device version of a   Y
 procedure or function in ‘target’ regions
 ‘interop’ directive                         Y       Cf.
@@ -431,9 +432,9 @@ Deprecation of no-argument ‘destroy’        N/A     undeprecated in
 clause on ‘depobj’                                  OpenMP 6
 ‘linear’ clause syntax changes and ‘step’   Y
 modifier
-Deprecation of minus operator for           N
+Deprecation of minus operator for           Y
 reductions
-Deprecation of separating ‘map’ modifiers   N
+Deprecation of separating ‘map’ modifiers   Y
 without comma
 ‘declare mapper’ with iterator and          N
 ‘present’ modifiers
@@ -442,28 +443,28 @@ found in the data environment, the
 pointer retains its original value
 New ‘enter’ clause as alias for ‘to’ on     Y
 declare target directive
-Deprecation of ‘to’ clause on declare       N
+Deprecation of ‘to’ clause on declare       Y
 target directive
 Extended list of directives permitted in    Y
 Fortran pure procedures
 New ‘allocators’ directive for Fortran      Y
-Deprecation of ‘allocate’ directive for     N
+Deprecation of ‘allocate’ directive for     Y
 Fortran allocatables/pointers
 Optional paired ‘end’ directive with        Y
 ‘dispatch’
-New ‘memspace’ and ‘traits’ modifiers for   N
-‘uses_allocators’
-Deprecation of traits array following the   N
+New ‘memspace’ and ‘traits’ modifiers for   P       Only predefined
+‘uses_allocators’                                   allocators
+Deprecation of traits array following the   Y
 allocator_handle expression in
 ‘uses_allocators’
 New ‘otherwise’ clause as alias for         Y
 ‘default’ on metadirectives
-Deprecation of ‘default’ clause on          N       Both ‘otherwise’
+Deprecation of ‘default’ clause on          Y       Both ‘otherwise’
 metadirectives                                      and ‘default’
                                                     are accepted
                                                     without
                                                     diagnostics.
-Deprecation of delimited form of ‘declare   N
+Deprecation of delimited form of ‘declare   Y
 target’
 Reproducible semantics changed for          N
 ‘order(concurrent)’
@@ -474,7 +475,7 @@ Default map-type for the ‘map’ clause in    Y
 ‘target enter/exit data’
 New ‘doacross’ clause as alias for          Y
 ‘depend’ with ‘source’/‘sink’ modifier
-Deprecation of ‘depend’ with                N
+Deprecation of ‘depend’ with                Y
 ‘source’/‘sink’ modifier
 ‘omp_cur_iteration’ keyword                 Y
 
@@ -511,7 +512,7 @@ sentinel is warned for with ‘-Wsurprising’ (enabled by ‘-Wall’).
 Unknown clauses are always rejected with an error.
 
 
-File: libgomp.info,  Node: OpenMP 6.0,  Prev: OpenMP 5.2,  Up: OpenMP Implementation Status
+File: libgomp.info,  Node: OpenMP 6.0,  Next: OpenMP Technical Report 14,  Prev: OpenMP 5.2,  Up: OpenMP Implementation Status
 
 2.5 OpenMP 6.0
 ==============
@@ -633,7 +634,7 @@ Scope requirement changes for               N
 ‘parallel’ directive
 ‘self_maps’ clause to ‘requires’            Y
 directive
-‘no_openmp_constructs’ assumptions clause   N
+‘no_openmp_constructs’ assumptions clause   Y
 Restriction for ‘ordered’ regarding         N
 loop-transforming directives
 ‘apply’ clause to loop-transforming         N
@@ -700,7 +701,7 @@ permitting many more combinations
 ‘omp_get_device_teams_thread_limit’, and
 ‘omp_set_device_teams_thread_limit’
 routines
-‘omp_target_memset’ and                     N
+‘omp_target_memset’ and                     Y
 ‘omp_target_memset_async’ routines
 Fortran version of the interop runtime      Y
 routines
@@ -760,6 +761,41 @@ spaces between directive names are
 mandatory
 Update of the map-type decay for mapping    N
 and ‘declare_mapper’
+
+
+File: libgomp.info,  Node: OpenMP Technical Report 14,  Prev: OpenMP 6.0,  Up: OpenMP Implementation Status
+
+2.6 OpenMP Technical Report 14
+==============================
+
+Technical Report (TR) 14 is the first preview for OpenMP 6.1.
+
+New features listed in Appendix B of the OpenMP specification
+-------------------------------------------------------------
+
+The ‘depth’ clause to ‘fuse’ directive      N
+The ‘attach’ modifier to the ‘map’ clause   N
+The ‘dyn_groupprivate’ clause and the       N
+‘omp_get_dyn_groupprivate_ptr’,
+‘omp_get_dyn_groupprivate_size’, and
+‘omp_get_dyn_groupprivate_size’ routines
+‘begin declare_variant’ directive in        N
+Fortran
+‘grid’ and ‘tile’ modifier to the ‘size’    N
+clause
+New ‘flatten’ loop-transforming directive   N
+‘scaled’ modifier to ‘simdlen’ clause       N
+New ‘omp_default_device’ identifier as      Y
+conforming device number
+Clarify when ‘omp_target_is_accessible’     Y
+routine returns zero
+
+Deprecated features, unless listed above
+----------------------------------------
+
+Deprecation of conditional-update-capture   N
+structured block without a capture
+statement
 
 
 File: libgomp.info,  Node: Runtime Library Routines,  Next: Environment Variables,  Prev: OpenMP Implementation Status,  Up: Top
@@ -1364,7 +1400,8 @@ _Description_:
      ‘omp_proc_bind_false’, ‘omp_proc_bind_true’,
      ‘omp_proc_bind_primary’, ‘omp_proc_bind_master’,
      ‘omp_proc_bind_close’ and ‘omp_proc_bind_spread’, where
-     ‘omp_proc_bind_master’ is an alias for ‘omp_proc_bind_primary’.
+     ‘omp_proc_bind_master’ is a deprecated alias for
+     ‘omp_proc_bind_primary’.
 
 _C/C++_:
      _Prototype_:   ‘omp_proc_bind_t omp_get_proc_bind(void);’
@@ -1785,11 +1822,20 @@ _Description_:
      The effect of running this routine in a ‘target’ region is
      unspecified.
 
+     Note that in GCC the function is marked pure, i.e.  as returning
+     always the same number.  When GCC was not configured to support
+     offloading, it is replaced by zero; compile with
+     ‘-fno-builtin-omp_get_num_devices’ if a run-time function is
+     desired.
+
 _C/C++_:
      _Prototype_:   ‘int omp_get_num_devices(void);’
 
 _Fortran_:
      _Interface_:   ‘integer function omp_get_num_devices()’
+
+_See also_:
+     *note omp_get_initial_device::
 
 _Reference_:
      OpenMP specification v4.5 (https://www.openmp.org), Section 3.2.31.
@@ -1917,6 +1963,12 @@ _Description_:
      The effect of running this routine in a ‘target’ region is
      unspecified.
 
+     Note that GCC inlines this function unless you compile with
+     ‘-fno-builtin-omp_get_initial_device’.  If GCC was not configured
+     to support offloading, it expands to constant zero; in non-host
+     code it expands to ‘omp_initial_device’; and otherwise it is
+     replaced with a call to ‘omp_get_num_devices’.
+
 _C/C++_
      _Prototype_:   ‘int omp_get_initial_device(void);’
 
@@ -1948,6 +2000,8 @@ pointers on devices.  They have C linkage and do not throw exceptions.
 * omp_target_memcpy_async:: Copy data between devices asynchronously
 * omp_target_memcpy_rect:: Copy a subvolume of data between devices
 * omp_target_memcpy_rect_async:: Copy a subvolume of data between devices asynchronously
+* omp_target_memset:: Set bytes in device memory
+* omp_target_memset_async:: Set bytes in device memory asynchronously
 * omp_target_associate_ptr:: Associate a device pointer with a host pointer
 * omp_target_disassociate_ptr:: Remove device-host pointer association
 * omp_get_mapped_ptr:: Return device pointer to a host pointer
@@ -2032,18 +2086,10 @@ File: libgomp.info,  Node: omp_target_is_present,  Next: omp_target_is_accessibl
 _Description_:
      This routine tests whether storage, identified by the host pointer
      PTR is mapped to the device specified by DEVICE_NUM.  If so, it
-     returns a nonzero value and otherwise zero.
-
-     In GCC, this includes self mapping such that
-     ‘omp_target_is_present’ returns _true_ when DEVICE_NUM specifies
-     the host or when the host and the device share memory.  If PTR is a
-     null pointer, TRUE is returned and if DEVICE_NUM is an invalid
-     device number, FALSE is returned.
-
-     If those conditions do not apply, _true_ is returned if the
-     association has been established by an explicit or implicit ‘map’
-     clause, the ‘declare target’ directive or a call to the
-     ‘omp_target_associate_ptr’ routine.
+     returns a nonzero value and otherwise zero.  In particular, it
+     always returns zero for the null pointer and for invalid device
+     numbers; for the host device, a nonzero value is returned for all
+     non-null pointers.
 
      Running this routine in a ‘target’ region except on the initial
      device is not supported.
@@ -2060,7 +2106,8 @@ _Fortran_:
                     ‘integer(c_int), value :: device_num’
 
 _See also_:
-     *note omp_target_associate_ptr::
+     *note omp_get_mapped_ptr::, *note omp_target_associate_ptr::, *note
+     omp_target_is_accessible::
 
 _Reference_:
      OpenMP specification v5.1 (https://www.openmp.org), Section 3.8.3
@@ -2078,13 +2125,18 @@ _Description_:
      zero.
 
      The address given by PTR is interpreted to be in the address space
-     of the device and SIZE must be positive.
+     of the device and SIZE must be positive.  NULL pointers and
+     zero-length ranges always return zero.
 
      Note that GCC's current implementation assumes that PTR is a valid
-     host pointer.  Therefore, all addresses given by PTR are assumed to
-     be accessible on the initial device.  And, to err on the safe side,
-     this memory is only available on a non-host device that can access
-     all host memory ([uniform] shared memory access).
+     host pointer.  Therefore, all non-NULL addresses given by PTR are
+     assumed to be accessible on the initial device.  The address is
+     only reported as accessible on non-host devices if this is _known_
+     to be the case, or if the device reports that all memory is
+     accessible (i.e.  [unified] shared memory access).  If the runtime
+     is uncertain it may report accessible memory as inaccessible.  For
+     a memory range to be reported accessible, the whole range must be
+     known to be accessible.
 
      Running this routine in a ‘target’ region except on the initial
      device is not supported.
@@ -2105,7 +2157,7 @@ _Fortran_:
                     ‘integer(c_int), value :: device_num’
 
 _See also_:
-     *note omp_target_associate_ptr::
+     *note omp_target_is_present::
 
 _Reference_:
      OpenMP specification v5.1 (https://www.openmp.org), Section 3.8.4
@@ -2277,7 +2329,7 @@ _Reference_:
      OpenMP specification v5.1 (https://www.openmp.org), Section 3.8.6
 
 
-File: libgomp.info,  Node: omp_target_memcpy_rect_async,  Next: omp_target_associate_ptr,  Prev: omp_target_memcpy_rect,  Up: Device Memory Routines
+File: libgomp.info,  Node: omp_target_memcpy_rect_async,  Next: omp_target_memset,  Prev: omp_target_memcpy_rect,  Up: Device Memory Routines
 
 3.7.8 ‘omp_target_memcpy_rect_async’ - Copy a subvolume of data between devices asynchronously
 ----------------------------------------------------------------------------------------------
@@ -2355,10 +2407,95 @@ _Reference_:
      OpenMP specification v5.1 (https://www.openmp.org), Section 3.8.8
 
 
-File: libgomp.info,  Node: omp_target_associate_ptr,  Next: omp_target_disassociate_ptr,  Prev: omp_target_memcpy_rect_async,  Up: Device Memory Routines
+File: libgomp.info,  Node: omp_target_memset,  Next: omp_target_memset_async,  Prev: omp_target_memcpy_rect_async,  Up: Device Memory Routines
 
-3.7.9 ‘omp_target_associate_ptr’ - Associate a device pointer with a host pointer
----------------------------------------------------------------------------------
+3.7.9 ‘omp_target_memset’ - Set bytes in device memory
+------------------------------------------------------
+
+_Description_:
+     This routine fills memory on the device identified by device number
+     DEVICE_NUM.  Starting from the device address PTR, the first COUNT
+     bytes are set to the value VAL, converted to ‘unsigned char’.  If
+     COUNT is zero, the routine has no effect; if PTR is ‘NULL’, the
+     behavior is unspecified.  The function returns PTR.
+
+     The DEVICE_NUM must be a conforming device number and PTR must be a
+     valid device pointer for that device.  Running this routine in a
+     ‘target’ region except on the initial device is not supported.
+
+_C/C++_
+     _Prototype_:   ‘void *omp_target_memcpy(void *ptr,’
+                    ‘ int val,’
+                    ‘ size_t count,’
+                    ‘ int device_num)’
+
+_Fortran_:
+     _Interface_:   ‘type(c_ptr) function omp_target_memset( &’
+                    ‘ ptr, val, count, device_num) bind(C)’
+                    ‘use, intrinsic :: iso_c_binding, only: c_ptr, c_size_t,
+                    c_int’
+                    ‘type(c_ptr), value :: ptr’
+                    ‘integer(c_size_t), value :: count’
+                    ‘integer(c_int), value :: val, device_num’
+
+_See also_:
+     *note omp_target_memset_async::
+
+_Reference_:
+     OpenMP specification v6.0 (https://www.openmp.org), Section 25.8.1
+
+
+File: libgomp.info,  Node: omp_target_memset_async,  Next: omp_target_associate_ptr,  Prev: omp_target_memset,  Up: Device Memory Routines
+
+3.7.10 ‘omp_target_memset’ - Set bytes in device memory asynchronously
+----------------------------------------------------------------------
+
+_Description_:
+     This routine fills memory on the device identified by device number
+     DEVICE_NUM.  Starting from the device address PTR, the first COUNT
+     bytes are set to the value VAL, converted to ‘unsigned char’.  If
+     COUNT is zero, the routine has no effect; if PTR is ‘NULL’, the
+     behavior is unspecified.  Task dependence is expressed by passing
+     an array of depend objects to DEPOBJ_LIST, where the number of
+     array elements is passed as DEPOBJ_COUNT; if the count is zero, the
+     DEPOBJ_LIST argument is ignored.  In C++ and Fortran, the
+     DEPOBJ_LIST argument can also be omitted in that case.  The
+     function returns PTR.
+
+     The DEVICE_NUM must be a conforming device number and PTR must be a
+     valid device pointer for that device.  Running this routine in a
+     ‘target’ region except on the initial device is not supported.
+
+_C/C++_
+     _Prototype_:   ‘void *omp_target_memcpy_async(void *ptr,’
+                    ‘ int val,’
+                    ‘ size_t count,’
+                    ‘ int device_num,’
+                    ‘ int depobj_count,’
+                    ‘ omp_depend_t *depobj_list)’
+
+_Fortran_:
+     _Interface_:   ‘type(c_ptr) function omp_target_memset_async( &’
+                    ‘ ptr, val, count, device_num, &’
+                    ‘ depobj_count, depobj_list) bind(C)’
+                    ‘use, intrinsic :: iso_c_binding, only: c_ptr, c_size_t,
+                    c_int’
+                    ‘type(c_ptr), value :: ptr’
+                    ‘integer(c_size_t), value :: count’
+                    ‘integer(c_int), value :: val, device_num, depobj_count’
+                    ‘integer(omp_depend_kind), optional :: depobj_list(*)’
+
+_See also_:
+     *note omp_target_memset::
+
+_Reference_:
+     OpenMP specification v6.0 (https://www.openmp.org), Section 25.8.2
+
+
+File: libgomp.info,  Node: omp_target_associate_ptr,  Next: omp_target_disassociate_ptr,  Prev: omp_target_memset_async,  Up: Device Memory Routines
+
+3.7.11 ‘omp_target_associate_ptr’ - Associate a device pointer with a host pointer
+----------------------------------------------------------------------------------
 
 _Description_:
      This routine associates storage on the host with storage on a
@@ -2413,7 +2550,7 @@ _Fortran_:
 
 _See also_:
      *note omp_target_disassociate_ptr::, *note omp_target_is_present::,
-     *note omp_target_alloc::
+     *note omp_get_mapped_ptr::, *note omp_target_alloc::
 
 _Reference_:
      OpenMP specification v5.1 (https://www.openmp.org), Section 3.8.9
@@ -2421,7 +2558,7 @@ _Reference_:
 
 File: libgomp.info,  Node: omp_target_disassociate_ptr,  Next: omp_get_mapped_ptr,  Prev: omp_target_associate_ptr,  Up: Device Memory Routines
 
-3.7.10 ‘omp_target_disassociate_ptr’ - Remove device-host pointer association
+3.7.12 ‘omp_target_disassociate_ptr’ - Remove device-host pointer association
 -----------------------------------------------------------------------------
 
 _Description_:
@@ -2464,17 +2601,25 @@ _Reference_:
 
 File: libgomp.info,  Node: omp_get_mapped_ptr,  Prev: omp_target_disassociate_ptr,  Up: Device Memory Routines
 
-3.7.11 ‘omp_get_mapped_ptr’ - Return device pointer to a host pointer
+3.7.13 ‘omp_get_mapped_ptr’ - Return device pointer to a host pointer
 ---------------------------------------------------------------------
 
 _Description_:
-     If the device number is refers to the initial device or to a device
-     with memory accessible from the host (shared memory), the
-     ‘omp_get_mapped_ptr’ routines returns the value of the passed PTR.
+     If the device number refers to the initial device,
+     ‘omp_get_mapped_ptr’ returns the value of the passed PTR.
      Otherwise, if associated storage to the passed host pointer PTR
      exists on device associated with DEVICE_NUM, it returns that
      pointer.  In all other cases and in cases of an error, a null
      pointer is returned.
+
+     If the device number is not the initial device and the pointer
+     points to a variable that is specified in a ‘declare target’
+     directive: When requiring ‘unified_shared_memory’ or ‘self_maps’, a
+     null pointer is returned if the variable appears in a ‘link’ or
+     ‘enter’ clause.  Otherwise, the corresponding device memory is
+     returned; with the ‘link’ clause, GCC returns the address of the
+     pointer-typed link variable on the device, not to the data that is
+     mapped to that variable.
 
      The association of storage location is established either via an
      explicit or implicit ‘map’ clause, the ‘declare target’ directive
@@ -2495,7 +2640,7 @@ _Fortran_:
                     ‘integer(c_int), value :: device_num’
 
 _See also_:
-     *note omp_target_associate_ptr::
+     *note omp_target_is_present::, *note omp_target_associate_ptr::
 
 _Reference_:
      OpenMP specification v5.1 (https://www.openmp.org), Section 3.8.11
@@ -2942,6 +3087,12 @@ _Description_:
      In GCC, the effect of running this routine in a ‘target’ region
      that is not the initial device is unspecified.
 
+     GCC implements the OpenMP 6.0 version of this function for C and
+     C++, which is not compatible with its type signature in previous
+     versions of the OpenMP specification.  In older versions, the type
+     ‘int*’ was used for the RET_CODE argument in place of a pointer to
+     the enumerated type ‘omp_interop_rc_t’.
+
 _C/C++_:
      _Prototype_:   ‘omp_intptr_t omp_get_interop_int(const omp_interop_t
                     interop, omp_interop_property_t property_id,
@@ -2981,6 +3132,12 @@ _Description_:
      In GCC, the effect of running this routine in a ‘target’ region
      that is not the initial device is unspecified.
 
+     GCC implements the OpenMP 6.0 version of this function for C and
+     C++, which is not compatible with its type signature in previous
+     versions of the OpenMP specification.  In older versions, the type
+     ‘int*’ was used for the RET_CODE argument in place of a pointer to
+     the enumerated type ‘omp_interop_rc_t’.
+
 _C/C++_:
      _Prototype_:   ‘void *omp_get_interop_ptr(const omp_interop_t interop,
                     omp_interop_property_t property_id, omp_interop_rc_t
@@ -3019,6 +3176,12 @@ _Description_:
 
      In GCC, the effect of running this routine in a ‘target’ region
      that is not the initial device is unspecified.
+
+     GCC implements the OpenMP 6.0 version of this function for C and
+     C++, which is not compatible with its type signature in previous
+     versions of the OpenMP specification.  In older versions, the type
+     ‘int*’ was used for the RET_CODE argument in place of a pointer to
+     the enumerated type ‘omp_interop_rc_t’.
 
 _C/C++_:
      _Prototype_:   ‘const char *omp_get_interop_str(const omp_interop_t
@@ -3123,6 +3286,12 @@ _Description_:
 
      The behavior is unspecified if value of RET_CODE was not set by an
      interoperability routine invoked for INTEROP.
+
+     GCC implements the OpenMP 6.0 version of this function for C and
+     C++, which is not compatible with its type signature in previous
+     versions of the OpenMP specification.  In older versions, the type
+     ‘int’ was used for the RET_CODE argument in place of the enumerated
+     type ‘omp_interop_rc_t’.
 
 _C/C++_:
      _Prototype_:   ‘const char *omp_get_interop_rc_desc(const omp_interop_t
@@ -3675,7 +3844,7 @@ _Example_:
      ‘GOMP_SPINCOUNT’, are only printed when VERBOSE set to ‘true’.
 
           OPENMP DISPLAY ENVIRONMENT BEGIN
-            _OPENMP = '201511'
+            _OPENMP = '202111'
             [host] OMP_DYNAMIC = 'FALSE'
             [host] OMP_NESTED = 'FALSE'
             [all] OMP_CANCELLATION = 'FALSE'
@@ -3760,7 +3929,7 @@ _Description_:
      comma-separated list of memory trait and value pairs, separated by
      ‘=’.
 
-     See *note Memory allocation:: for a list of supported prefedined
+     See *note Memory allocation:: for a list of supported predefined
      allocators, memory spaces, and traits.
 
      Note: The corresponding device environment variables are currently
@@ -4077,14 +4246,14 @@ _Description_:
      Specifies whether threads may be moved between processors.  If set
      to ‘TRUE’, OpenMP threads should not be moved; if set to ‘FALSE’
      they may be moved.  Alternatively, a comma separated list with the
-     values ‘PRIMARY’, ‘MASTER’, ‘CLOSE’ and ‘SPREAD’ can be used to
-     specify the thread affinity policy for the corresponding nesting
-     level.  With ‘PRIMARY’ and ‘MASTER’ the worker threads are in the
-     same place partition as the primary thread.  With ‘CLOSE’ those are
-     kept close to the primary thread in contiguous place partitions.
-     And with ‘SPREAD’ a sparse distribution across the place partitions
-     is used.  Specifying more than one item in the list automatically
-     enables nesting by default.
+     values ‘PRIMARY’, ‘MASTER’ (deprecated since OpenMP 5.1), ‘CLOSE’
+     and ‘SPREAD’ can be used to specify the thread affinity policy for
+     the corresponding nesting level.  With ‘PRIMARY’ and ‘MASTER’ the
+     worker threads are in the same place partition as the primary
+     thread.  With ‘CLOSE’ those are kept close to the primary thread in
+     contiguous place partitions.  And with ‘SPREAD’ a sparse
+     distribution across the place partitions is used.  Specifying more
+     than one item in the list automatically enables nesting by default.
 
      When a list is specified, it also affects the MAX-ACTIVE-LEVELS-VAR
      ICV as described in *note OMP_MAX_ACTIVE_LEVELS::.
@@ -4509,6 +4678,7 @@ and the acceleration device.
                                 present on device.
 * acc_memcpy_to_device::        Copy host memory to device memory.
 * acc_memcpy_from_device::      Copy device memory to host memory.
+* acc_memcpy_device::           Copy memory within a device.
 * acc_attach::                  Let device pointer point to device-pointer target.
 * acc_detach::                  Let device pointer point to host-pointer target.
 
@@ -4974,15 +5144,15 @@ _C/C++_:
 
 _Fortran_:
      _Interface_:   ‘subroutine acc_copyin(a)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
      _Interface_:   ‘subroutine acc_copyin(a, len)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer len’
      _Interface_:   ‘subroutine acc_copyin_async(a, async)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer(acc_handle_kind) :: async’
      _Interface_:   ‘subroutine acc_copyin_async(a, len, async)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer len’
                     ‘integer(acc_handle_kind) :: async’
 
@@ -5016,14 +5186,14 @@ _C/C++_:
 
 _Fortran_:
      _Interface_:   ‘subroutine acc_present_or_copyin(a)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
      _Interface_:   ‘subroutine acc_present_or_copyin(a, len)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer len’
      _Interface_:   ‘subroutine acc_pcopyin(a)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
      _Interface_:   ‘subroutine acc_pcopyin(a, len)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer len’
 
 _Reference_:
@@ -5053,15 +5223,15 @@ _C/C++_:
 
 _Fortran_:
      _Interface_:   ‘subroutine acc_create(a)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
      _Interface_:   ‘subroutine acc_create(a, len)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer len’
      _Interface_:   ‘subroutine acc_create_async(a, async)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer(acc_handle_kind) :: async’
      _Interface_:   ‘subroutine acc_create_async(a, len, async)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer len’
                     ‘integer(acc_handle_kind) :: async’
 
@@ -5095,14 +5265,14 @@ _C/C++_:
 
 _Fortran_:
      _Interface_:   ‘subroutine acc_present_or_create(a)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
      _Interface_:   ‘subroutine acc_present_or_create(a, len)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer len’
      _Interface_:   ‘subroutine acc_pcreate(a)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
      _Interface_:   ‘subroutine acc_pcreate(a, len)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer len’
 
 _Reference_:
@@ -5132,27 +5302,27 @@ _C/C++_:
 
 _Fortran_:
      _Interface_:   ‘subroutine acc_copyout(a)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
      _Interface_:   ‘subroutine acc_copyout(a, len)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer len’
      _Interface_:   ‘subroutine acc_copyout_async(a, async)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer(acc_handle_kind) :: async’
      _Interface_:   ‘subroutine acc_copyout_async(a, len, async)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer len’
                     ‘integer(acc_handle_kind) :: async’
      _Interface_:   ‘subroutine acc_copyout_finalize(a)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
      _Interface_:   ‘subroutine acc_copyout_finalize(a, len)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer len’
      _Interface_:   ‘subroutine acc_copyout_finalize_async(a, async)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer(acc_handle_kind) :: async’
      _Interface_:   ‘subroutine acc_copyout_finalize_async(a, len, async)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer len’
                     ‘integer(acc_handle_kind) :: async’
 
@@ -5183,27 +5353,27 @@ _C/C++_:
 
 _Fortran_:
      _Interface_:   ‘subroutine acc_delete(a)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
      _Interface_:   ‘subroutine acc_delete(a, len)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer len’
      _Interface_:   ‘subroutine acc_delete_async(a, async)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer(acc_handle_kind) :: async’
      _Interface_:   ‘subroutine acc_delete_async(a, len, async)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer len’
                     ‘integer(acc_handle_kind) :: async’
      _Interface_:   ‘subroutine acc_delete_finalize(a)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
      _Interface_:   ‘subroutine acc_delete_finalize(a, len)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer len’
-     _Interface_:   ‘subroutine acc_delete_async_finalize(a, async)’
-                    ‘type, dimension(:[,:]...) :: a’
+     _Interface_:   ‘subroutine acc_delete_finalize_async(a, async)’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer(acc_handle_kind) :: async’
-     _Interface_:   ‘subroutine acc_delete_async_finalize(a, len, async)’
-                    ‘type, dimension(:[,:]...) :: a’
+     _Interface_:   ‘subroutine acc_delete_finalize_async(a, len, async)’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer len’
                     ‘integer(acc_handle_kind) :: async’
 
@@ -5232,15 +5402,15 @@ _C/C++_:
 
 _Fortran_:
      _Interface_:   ‘subroutine acc_update_device(a)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
      _Interface_:   ‘subroutine acc_update_device(a, len)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer len’
      _Interface_:   ‘subroutine acc_update_device_async(a, async)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer(acc_handle_kind) :: async’
      _Interface_:   ‘subroutine acc_update_device_async(a, len, async)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer len’
                     ‘integer(acc_handle_kind) :: async’
 
@@ -5270,15 +5440,15 @@ _C/C++_:
 
 _Fortran_:
      _Interface_:   ‘subroutine acc_update_self(a)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
      _Interface_:   ‘subroutine acc_update_self(a, len)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer len’
      _Interface_:   ‘subroutine acc_update_self_async(a, async)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer(acc_handle_kind) :: async’
      _Interface_:   ‘subroutine acc_update_self_async(a, len, async)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer len’
                     ‘integer(acc_handle_kind) :: async’
 
@@ -5404,10 +5574,10 @@ _C/C++_:
 
 _Fortran_:
      _Interface_:   ‘function acc_is_present(a)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘logical acc_is_present’
      _Interface_:   ‘function acc_is_present(a, len)’
-                    ‘type, dimension(:[,:]...) :: a’
+                    ‘type(*), dimension(..) :: a’
                     ‘integer len’
                     ‘logical acc_is_present’
 
@@ -5448,7 +5618,7 @@ _Reference_:
      section 3.2.26.
 
 
-File: libgomp.info,  Node: acc_memcpy_from_device,  Next: acc_attach,  Prev: acc_memcpy_to_device,  Up: OpenACC Runtime Library Routines
+File: libgomp.info,  Node: acc_memcpy_from_device,  Next: acc_memcpy_device,  Prev: acc_memcpy_to_device,  Up: OpenACC Runtime Library Routines
 
 6.32 ‘acc_memcpy_from_device’ - Copy device memory to host memory.
 ==================================================================
@@ -5482,9 +5652,43 @@ _Reference_:
      section 3.2.27.
 
 
-File: libgomp.info,  Node: acc_attach,  Next: acc_detach,  Prev: acc_memcpy_from_device,  Up: OpenACC Runtime Library Routines
+File: libgomp.info,  Node: acc_memcpy_device,  Next: acc_attach,  Prev: acc_memcpy_from_device,  Up: OpenACC Runtime Library Routines
 
-6.33 ‘acc_attach’ - Let device pointer point to device-pointer target.
+6.33 ‘acc_memcpy_device’ - Copy memory within a device.
+=======================================================
+
+_Description_
+     This function copies device memory from one memory location to
+     another on the current device.  It copies BYTES bytes of data from
+     the device address, specified by DATA_DEV_SRC, to the device
+     address DATA_DEV_DEST.  The ‘_async’ version performs the transfer
+     asynchronously using the queue associated with ASYNC_ARG.
+
+_C/C++_:
+     _Prototype_:   ‘void acc_memcpy_device(d_void* data_dev_dest,’
+                    ‘d_void* data_dev_src, size_t bytes);’
+     _Prototype_:   ‘void acc_memcpy_device_async(d_void* data_dev_dest,’
+                    ‘d_void* data_dev_src, size_t bytes, int async_arg);’
+
+_Fortran_:
+     _Interface_:   ‘subroutine acc_memcpy_device(data_dev_dest, &’
+                    ‘data_dev_src, bytes)’
+     _Interface_:   ‘subroutine acc_memcpy_device_async(data_dev_dest, &’
+                    ‘data_dev_src, bytes, async_arg)’
+                    ‘type(c_ptr), value :: data_dev_dest’
+                    ‘type(c_ptr), value :: data_dev_src’
+                    ‘integer(c_size_t), value :: bytes’
+                    ‘integer(acc_handle_kind), value :: async_arg’
+
+_Reference_:
+     OpenACC specification v2.6 (https://www.openacc.org), section
+     3.2.33.  OpenACC specification v3.3 (https://www.openacc.org),
+     section 3.2.28.
+
+
+File: libgomp.info,  Node: acc_attach,  Next: acc_detach,  Prev: acc_memcpy_device,  Up: OpenACC Runtime Library Routines
+
+6.34 ‘acc_attach’ - Let device pointer point to device-pointer target.
 ======================================================================
 
 _Description_
@@ -5495,14 +5699,21 @@ _C/C++_:
      _Prototype_:   ‘void acc_attach(h_void **ptr_addr);’
      _Prototype_:   ‘void acc_attach_async(h_void **ptr_addr, int async);’
 
+_Fortran_:
+     _Interface_:   ‘subroutine acc_attach(ptr_addr)’
+     _Interface_:   ‘subroutine acc_attach_async(ptr_addr, async_arg)’
+                    ‘type(*), dimension(..) :: ptr_addr’
+                    ‘integer(acc_handle_kind), value :: async_arg’
+
 _Reference_:
      OpenACC specification v2.6 (https://www.openacc.org), section
-     3.2.34.
+     3.2.34.  OpenACC specification v3.3 (https://www.openacc.org),
+     section 3.2.29.
 
 
 File: libgomp.info,  Node: acc_detach,  Next: acc_get_current_cuda_device,  Prev: acc_attach,  Up: OpenACC Runtime Library Routines
 
-6.34 ‘acc_detach’ - Let device pointer point to host-pointer target.
+6.35 ‘acc_detach’ - Let device pointer point to host-pointer target.
 ====================================================================
 
 _Description_
@@ -5516,14 +5727,24 @@ _C/C++_:
      _Prototype_:   ‘void acc_detach_finalize_async(h_void **ptr_addr, int
                     async);’
 
+_Fortran_:
+     _Interface_:   ‘subroutine acc_detach(ptr_addr)’
+     _Interface_:   ‘subroutine acc_detach_async(ptr_addr, async_arg)’
+     _Interface_:   ‘subroutine acc_detach_finalize(ptr_addr)’
+     _Interface_:   ‘subroutine acc_detach_finalize_async(ptr_addr,
+                    async_arg)’
+                    ‘type(*), dimension(..) :: ptr_addr’
+                    ‘integer(acc_handle_kind), value :: async_arg’
+
 _Reference_:
      OpenACC specification v2.6 (https://www.openacc.org), section
-     3.2.35.
+     3.2.35.  OpenACC specification v3.3 (https://www.openacc.org),
+     section 3.2.29.
 
 
 File: libgomp.info,  Node: acc_get_current_cuda_device,  Next: acc_get_current_cuda_context,  Prev: acc_detach,  Up: OpenACC Runtime Library Routines
 
-6.35 ‘acc_get_current_cuda_device’ - Get CUDA device handle.
+6.36 ‘acc_get_current_cuda_device’ - Get CUDA device handle.
 ============================================================
 
 _Description_
@@ -5540,7 +5761,7 @@ _Reference_:
 
 File: libgomp.info,  Node: acc_get_current_cuda_context,  Next: acc_get_cuda_stream,  Prev: acc_get_current_cuda_device,  Up: OpenACC Runtime Library Routines
 
-6.36 ‘acc_get_current_cuda_context’ - Get CUDA context handle.
+6.37 ‘acc_get_current_cuda_context’ - Get CUDA context handle.
 ==============================================================
 
 _Description_
@@ -5557,7 +5778,7 @@ _Reference_:
 
 File: libgomp.info,  Node: acc_get_cuda_stream,  Next: acc_set_cuda_stream,  Prev: acc_get_current_cuda_context,  Up: OpenACC Runtime Library Routines
 
-6.37 ‘acc_get_cuda_stream’ - Get CUDA stream handle.
+6.38 ‘acc_get_cuda_stream’ - Get CUDA stream handle.
 ====================================================
 
 _Description_
@@ -5575,7 +5796,7 @@ _Reference_:
 
 File: libgomp.info,  Node: acc_set_cuda_stream,  Next: acc_prof_register,  Prev: acc_get_cuda_stream,  Up: OpenACC Runtime Library Routines
 
-6.38 ‘acc_set_cuda_stream’ - Set CUDA stream handle.
+6.39 ‘acc_set_cuda_stream’ - Set CUDA stream handle.
 ====================================================
 
 _Description_
@@ -5597,7 +5818,7 @@ _Reference_:
 
 File: libgomp.info,  Node: acc_prof_register,  Next: acc_prof_unregister,  Prev: acc_set_cuda_stream,  Up: OpenACC Runtime Library Routines
 
-6.39 ‘acc_prof_register’ - Register callbacks.
+6.40 ‘acc_prof_register’ - Register callbacks.
 ==============================================
 
 _Description_:
@@ -5616,7 +5837,7 @@ _Reference_:
 
 File: libgomp.info,  Node: acc_prof_unregister,  Next: acc_prof_lookup,  Prev: acc_prof_register,  Up: OpenACC Runtime Library Routines
 
-6.40 ‘acc_prof_unregister’ - Unregister callbacks.
+6.41 ‘acc_prof_unregister’ - Unregister callbacks.
 ==================================================
 
 _Description_:
@@ -5635,7 +5856,7 @@ _Reference_:
 
 File: libgomp.info,  Node: acc_prof_lookup,  Next: acc_register_library,  Prev: acc_prof_unregister,  Up: OpenACC Runtime Library Routines
 
-6.41 ‘acc_prof_lookup’ - Obtain inquiry functions.
+6.42 ‘acc_prof_lookup’ - Obtain inquiry functions.
 ==================================================
 
 _Description_:
@@ -5653,7 +5874,7 @@ _Reference_:
 
 File: libgomp.info,  Node: acc_register_library,  Prev: acc_prof_lookup,  Up: OpenACC Runtime Library Routines
 
-6.42 ‘acc_register_library’ - Library registration.
+6.43 ‘acc_register_library’ - Library registration.
 ===================================================
 
 _Description_:
@@ -6243,6 +6464,12 @@ GCN and Nvidia PTX the following traits are supported in addition; while
 OpenMP is supported on more architectures, GCC currently does not match
 any ‘arch’ or ‘isa’ traits for those.
 
+   Note that for AMD GCN and Nvidia PTX, the ‘isa’ is currently an exact
+match between the compiled-for ISA architecture and the matching ‘isa’
+trait value.  For instance, when compiling for ‘gfx942’, the ‘isa’ trait
+value ‘gfx9-4-generic’ is not matched and, likewise, ‘gfx942’ is not
+matched when compiling for its generic architecture.
+
 ‘arch’                                          ‘isa’
 -----------------------------------------------------------------------
 ‘x86’, ‘x86_64’, ‘i386’, ‘i486’, ‘i586’,        See ‘-m...’ flags in
@@ -6267,6 +6494,11 @@ The description below applies to:
      constant expression with value ‘omp_default_mem_alloc’ and no
      ‘align’ modifier has been specified.  (In that case, the normal
      ‘malloc’ allocation is used.)
+   • The ‘allocate’ clause can be used in the ‘target’ construct to
+     specify the memory used by ‘private’ and ‘firstprivate’ variables
+     on offload devices.  In the case of ‘firstprivate’, the initial
+     data is first allocated using the default memory allocator, then
+     copied to the memory region specified by the allocator.
    • The ‘allocate’ directive for variables in static memory; while the
      alignment is honored, the normal static memory is used.
    • Using the ‘allocate’ directive for automatic/stack variables,
@@ -6306,6 +6538,8 @@ omp_thread_mem_alloc             omp_low_lat_mem_space
                                  (implementation defined)
 ompx_gnu_pinned_mem_alloc        omp_default_mem_space (GNU
                                  extension)
+ompx_gnu_managed_mem_alloc       ompx_gnu_managed_mem_space
+                                 (GNU extension)
 
    Each predefined allocator, including ‘omp_null_allocator’, has a
 corresponding allocator class template that meet the C++ allocator
@@ -6330,6 +6564,7 @@ omp_cgroup_mem_alloc             omp::allocator::cgroup_mem
 omp_pteam_mem_alloc              omp::allocator::pteam_mem
 omp_thread_mem_alloc             omp::allocator::thread_mem
 ompx_gnu_pinned_mem_alloc        ompx::allocator::gnu_pinned_mem
+ompx_gnu_managed_mem_alloc       ompx::allocator::gnu_managed_mem
 
    The following traits are available when constructing a new allocator;
 if a trait is not specified or with the value ‘default’, the specified
@@ -6379,6 +6614,19 @@ Offload-Target Specifics::.
      the memkind library is available
    • ‘omp_high_bw_mem_space’ maps to ‘omp_default_mem_space’, unless the
      memkind library is available
+   • ‘ompx_gnu_managed_mem_space’ is a GNU extension that provides
+     managed memory accessible by both host and devices.  The memory
+     space is available if the offload target associated with the
+     DEFAULT-DEVICE-VAR ICV supports managed memory (see *note
+     Offload-Target Specifics::).  This memory is accessible by both the
+     host and the device at the same address, so it need not be mapped
+     with ‘map’ clauses.  Instead, use the ‘is_device_ptr’ clause or
+     ‘has_device_addr’ clause to indicate that the pointer is already
+     accessible on the device.  If managed memory is not supported by
+     the default device, as configured at the moment the allocator is
+     called, then the allocator will use the fall-back setting.  If the
+     default device is configured differently when the memory is freed,
+     via ‘omp_free’ or ‘omp_realloc’, the result may be undefined.
 
    On Linux systems, where the memkind library
 (https://github.com/memkind/memkind) (‘libmemkind.so.0’) is available at
@@ -6412,11 +6660,13 @@ therefore, unless the memory placement policy has been overridden, the
 ‘nearest’ allocation.
 
    Additional notes regarding the traits:
-   • The ‘pinned’ trait is supported on Linux hosts, but is subject to
-     the OS ‘ulimit’/‘rlimit’ locked memory settings.  It currently uses
-     ‘mmap’ and is therefore optimized for few allocations, including
-     large data.  If the conditions for numa or memkind allocations are
-     fulfilled, those allocators are used instead.
+   • The ‘pinned’ trait is supported on Linux hosts, but is usually
+     subject to the OS ‘ulimit’/‘rlimit’ locked memory settings (see
+     *note Offload-Target Specifics:: for exceptions).  The
+     implementation uses a custom allocator to try to use as few memory
+     pages as possible.  At present, freed pinned memory is not returned
+     to the OS (although it may be reused by subsequent pinned
+     allocations).
    • The default for the ‘pool_size’ trait is no pool and for every
      (re)allocation the associated library routine is called, which
      might internally use a memory pool.  Currently, the same applies
@@ -6499,13 +6749,15 @@ On the hardware side, there is the hierarchy (fine to coarse):
      such that the next reverse offload region is only executed after
      the previous one returned.
    • OpenMP code that has a ‘requires’ directive with ‘self_maps’ or
-     ‘unified_shared_memory’ is only supported if all AMD GPUs have the
-     ‘HSA_AMD_SYSTEM_INFO_SVM_ACCESSIBLE_BY_DEFAULT’ property; for
-     discrete GPUs, this may require setting the ‘HSA_XNACK’ environment
-     variable to ‘1’; for systems with both an APU and a discrete GPU
-     that does not support XNACK, consider using ‘ROCR_VISIBLE_DEVICES’
-     to enable only the APU. If not supported, all AMD GPU devices are
-     removed from the list of available devices ("host fallback").
+     ‘unified_shared_memory’ is only supported if _all_ the AMD GPUs
+     present have the ‘HSA_AMD_SYSTEM_INFO_SVM_ACCESSIBLE_BY_DEFAULT’
+     property; some systems require the "xnack" feature enabled for this
+     to be true, in which case the runtime will attempt to set the
+     ‘HSA_XNACK’ environment variable to ‘1’ automatically (user-set
+     values are not overridden, and the setting only affects the
+     executable itself and any child processes).  If any AMD GPU device
+     is not supported, all AMD GPUs are removed from the list of
+     available devices ("host fallback").
    • The available stack size can be changed using the ‘GCN_STACK_SIZE’
      environment variable; the default is 32 kiB per thread.
    • Low-latency memory (‘omp_low_lat_mem_space’) is supported when the
@@ -6521,6 +6773,32 @@ On the hardware side, there is the hierarchy (fine to coarse):
      ‘omp_thread_mem_alloc’, all use low-latency memory as first
      preference, and fall back to main graphics memory when the
      low-latency pool is exhausted.
+   • Pinned memory allocated using ‘omp_alloc’ with the
+     ‘ompx_gnu_pinned_mem_alloc’ allocator or the ‘pinned’ trait is
+     obtained via the CUDA API when an NVPTX device is present (even
+     when the primary device is AMD). This allows unlimited use of
+     pinned memory regardless of the OS ‘ulimit’/‘rlimit’ settings.
+   • Managed memory allocated on the host with the
+     ‘ompx_gnu_managed_mem_alloc’ allocator or in the
+     ‘ompx_gnu_managed_mem_space’ (both GNU extensions) allocate memory
+     equivalent to HIP Managed Memory, although _not_ actually allocated
+     using ‘hipMallocManaged’.  This memory is accessible by both the
+     host and the device at the same address, so it need not be mapped
+     with ‘map’ clauses.  Instead, use the ‘is_device_ptr’ clause or
+     ‘has_device_addr’ clause to indicate that the pointer is already
+     accessible on the device.  The ROCm runtime will automatically
+     handle data migration between host and device as needed.  Not all
+     AMD GPU devices support this feature, and many that do require that
+     ‘-mxnack=on’ is configured at compile time.  If managed memory is
+     not supported by the default device, as configured at the moment
+     the allocator is called, then the allocator will use the fall-back
+     setting.  If the default device is configured differently when the
+     memory is freed, via ‘omp_free’ or ‘omp_realloc’, the result may be
+     undefined.  If the current device does not support Unified Shared
+     Memory (or it is not enabled with ‘HSA_XNACK=1’) then Managed
+     Memory might still work, but allocations may only be visible to a
+     single device (whichever was the default device when the _first_
+     allocation was made).
    • The OpenMP routines ‘omp_target_memcpy_rect’ and
      ‘omp_target_memcpy_rect_async’ and the ‘target update’ directive
      for non-contiguous list items use the 3D memory-copy function of
@@ -6675,6 +6953,26 @@ requirements on CUDA version and hardware.
      ‘omp_thread_mem_alloc’, all use low-latency memory as first
      preference, and fall back to main graphics memory when the
      low-latency pool is exhausted.
+   • Managed memory allocated on the host with the
+     ‘ompx_gnu_managed_mem_alloc’ allocator or in the
+     ‘ompx_gnu_managed_mem_space’ (both GNU extensions) allocate memory
+     in the CUDA Managed Memory space using ‘cuMemAllocManaged’.  This
+     memory is accessible by both the host and the device at the same
+     address, so it need not be mapped with ‘map’ clauses.  Instead, use
+     the ‘is_device_ptr’ clause or ‘has_device_addr’ clause to indicate
+     that the pointer is already accessible on the device.  The CUDA
+     runtime will automatically handle data migration between host and
+     device as needed.  If managed memory is not supported by the
+     default device, as configured at the moment the allocator is
+     called, then the allocator will use the fall-back setting.  If the
+     default device is configured differently when the memory is freed,
+     via ‘omp_free’ or ‘omp_realloc’, the result may be undefined.
+   • Pinned memory allocated using ‘omp_alloc’ with the
+     ‘ompx_gnu_pinned_mem_alloc’ allocator or the ‘pinned’ trait is
+     obtained via the CUDA API when an NVPTX device is present.  This
+     provides a performance boost for NVPTX offload code and also allows
+     unlimited use of pinned memory regardless of the OS
+     ‘ulimit’/‘rlimit’ settings.
    • The OpenMP routines ‘omp_target_memcpy_rect’ and
      ‘omp_target_memcpy_rect_async’ and the ‘target update’ directive
      for non-contiguous list items use the 2D and 3D memory-copy
@@ -6784,7 +7082,7 @@ libgomp.  Only maintainers should need them.
 
 * Menu:
 
-* Implementing MASTER construct::
+* Implementing MASKED and MASTER construct::
 * Implementing CRITICAL construct::
 * Implementing ATOMIC construct::
 * Implementing FLUSH construct::
@@ -6801,20 +7099,23 @@ libgomp.  Only maintainers should need them.
 * Implementing OpenACC's PARALLEL construct::
 
 
-File: libgomp.info,  Node: Implementing MASTER construct,  Next: Implementing CRITICAL construct,  Up: The libgomp ABI
+File: libgomp.info,  Node: Implementing MASKED and MASTER construct,  Next: Implementing CRITICAL construct,  Up: The libgomp ABI
 
-13.1 Implementing MASTER construct
-==================================
+13.1 Implementing MASKED and MASTER construct
+=============================================
 
-     if (omp_get_thread_num () == 0)
+     if (omp_get_thread_num () == thread_num)
        block
 
+   Hereby, THREAD_NUM has the value of the argument to the ‘filter’
+clause or zero if not specified.
+
    Alternately, we generate two copies of the parallel subfunction and
-only include this in the version run by the primary thread.  Surely this
-is not worthwhile though...
+only include this in the version run by the THREAD_NUM thread.  Surely
+this is not worthwhile though...
 
 
-File: libgomp.info,  Node: Implementing CRITICAL construct,  Next: Implementing ATOMIC construct,  Prev: Implementing MASTER construct,  Up: The libgomp ABI
+File: libgomp.info,  Node: Implementing CRITICAL construct,  Next: Implementing ATOMIC construct,  Prev: Implementing MASKED and MASTER construct,  Up: The libgomp ABI
 
 13.2 Implementing CRITICAL construct
 ====================================
@@ -8458,220 +8759,224 @@ Tag Table:
 Node: Top2081
 Node: Enabling OpenMP4910
 Node: OpenMP Implementation Status6147
-Node: OpenMP 4.56846
-Node: OpenMP 5.07022
-Node: OpenMP 5.112331
-Node: OpenMP 5.217830
-Ref: OpenMP 5.2-Footnote-121573
-Node: OpenMP 6.022002
-Node: Runtime Library Routines31409
-Node: Thread Team Routines32072
-Node: omp_set_num_threads33659
-Node: omp_get_num_threads34529
-Node: omp_get_max_threads35652
-Node: omp_get_thread_num36423
-Node: omp_in_parallel37312
-Node: omp_set_dynamic37990
-Node: omp_get_dynamic38889
-Node: omp_get_cancellation39800
-Node: omp_set_nested40626
-Node: omp_get_nested41985
-Node: omp_set_schedule43787
-Node: omp_get_schedule44910
-Node: omp_get_teams_thread_limit45894
-Node: omp_get_supported_active_levels46674
-Node: omp_set_max_active_levels47491
-Node: omp_get_max_active_levels48460
-Node: omp_get_level49195
-Node: omp_get_ancestor_thread_num49841
-Node: omp_get_team_size50791
-Node: omp_get_active_level51790
-Node: Thread Affinity Routines52494
-Node: omp_get_proc_bind52894
-Node: Teams Region Routines53914
-Node: omp_get_num_teams54626
-Node: omp_get_team_num55124
-Node: omp_set_num_teams55635
-Node: omp_get_max_teams56531
-Node: omp_set_teams_thread_limit57239
-Node: omp_get_thread_limit58268
-Node: Tasking Routines58880
-Node: omp_get_max_task_priority59391
-Node: omp_in_explicit_task59986
-Node: omp_in_final60908
-Node: Resource Relinquishing Routines61579
-Node: omp_pause_resource62051
-Node: omp_pause_resource_all63164
-Node: Device Information Routines64167
-Node: omp_get_num_procs65122
-Node: omp_set_default_device65655
-Node: omp_get_default_device66663
-Node: omp_get_num_devices67839
-Node: omp_get_device_num68485
-Node: omp_get_device_from_uid69327
-Node: omp_get_uid_from_device70527
-Node: omp_is_initial_device71742
-Node: omp_get_initial_device72669
-Node: Device Memory Routines73584
-Node: omp_target_alloc74624
-Node: omp_target_free76231
-Node: omp_target_is_present77459
-Node: omp_target_is_accessible79183
-Node: omp_target_memcpy81041
-Node: omp_target_memcpy_async82919
-Node: omp_target_memcpy_rect85463
-Node: omp_target_memcpy_rect_async88798
-Node: omp_target_associate_ptr92805
-Node: omp_target_disassociate_ptr95870
-Node: omp_get_mapped_ptr97679
-Node: Lock Routines99266
-Node: omp_init_lock100114
-Node: omp_init_nest_lock100755
-Node: omp_destroy_lock101493
-Node: omp_destroy_nest_lock102184
-Node: omp_set_lock102938
-Node: omp_set_nest_lock103816
-Node: omp_unset_lock104732
-Node: omp_unset_nest_lock105689
-Node: omp_test_lock106711
-Node: omp_test_nest_lock107733
-Node: Timing Routines108749
-Node: omp_get_wtick109126
-Node: omp_get_wtime109693
-Node: Event Routine110474
-Node: omp_fulfill_event110806
-Node: Interoperability Routines111818
-Node: omp_get_num_interop_properties112694
-Node: omp_get_interop_int114031
-Node: omp_get_interop_ptr115848
-Node: omp_get_interop_str117634
-Node: omp_get_interop_name119410
-Node: omp_get_interop_type_desc120752
-Node: omp_get_interop_rc_desc122519
-Node: Memory Management Routines123724
-Node: omp_init_allocator124652
-Node: omp_destroy_allocator126349
-Node: omp_set_default_allocator127353
-Node: omp_get_default_allocator128415
-Node: omp_alloc129384
-Node: omp_aligned_alloc131563
-Node: omp_free134181
-Node: omp_calloc135888
-Node: omp_aligned_calloc138183
-Node: omp_realloc140815
-Node: Environment Display Routine144305
-Node: omp_display_env144681
-Node: Environment Variables147592
-Node: OMP_ALLOCATOR150401
-Node: OMP_AFFINITY_FORMAT152028
-Node: OMP_CANCELLATION154704
-Node: OMP_DISPLAY_AFFINITY155320
-Node: OMP_DISPLAY_ENV156027
-Node: OMP_DEFAULT_DEVICE156909
-Node: OMP_DYNAMIC157945
-Node: OMP_MAX_ACTIVE_LEVELS158584
-Node: OMP_MAX_TASK_PRIORITY159625
-Node: OMP_NESTED160332
-Node: OMP_NUM_TEAMS161617
-Node: OMP_NUM_THREADS162334
-Node: OMP_PROC_BIND163354
-Node: OMP_PLACES164939
-Node: OMP_STACKSIZE167755
-Node: OMP_SCHEDULE168681
-Node: OMP_TARGET_OFFLOAD169468
-Node: OMP_TEAMS_THREAD_LIMIT170999
-Node: OMP_THREAD_LIMIT171860
-Node: OMP_WAIT_POLICY172524
-Node: GOMP_CPU_AFFINITY173228
-Node: GOMP_DEBUG174995
-Node: GOMP_STACKSIZE175509
-Node: GOMP_SPINCOUNT176348
-Node: GOMP_RTEMS_THREAD_POOLS177620
-Node: Enabling OpenACC179869
-Node: OpenACC Runtime Library Routines180715
-Node: acc_get_num_devices185000
-Node: acc_set_device_type185742
-Node: acc_get_device_type186522
-Node: acc_set_device_num187567
-Node: acc_get_device_num188404
-Node: acc_get_property189223
-Node: acc_async_test191515
-Node: acc_async_test_all192514
-Node: acc_wait193421
-Node: acc_wait_all194312
-Node: acc_wait_all_async195093
-Node: acc_wait_async195861
-Node: acc_init196585
-Node: acc_shutdown197246
-Node: acc_on_device197929
-Node: acc_malloc199151
-Node: acc_free199875
-Node: acc_copyin200539
-Node: acc_present_or_copyin202186
-Node: acc_create204014
-Node: acc_present_or_create205706
-Node: acc_copyout207542
-Node: acc_delete209962
-Node: acc_update_device212325
-Node: acc_update_self213959
-Node: acc_map_data215609
-Node: acc_unmap_data216705
-Node: acc_deviceptr217463
-Node: acc_hostptr218274
-Node: acc_is_present219074
-Node: acc_memcpy_to_device220645
-Node: acc_memcpy_from_device222132
-Node: acc_attach223669
-Node: acc_detach224348
-Node: acc_get_current_cuda_device225207
-Node: acc_get_current_cuda_context225800
-Node: acc_get_cuda_stream226408
-Node: acc_set_cuda_stream227007
-Node: acc_prof_register227690
-Node: acc_prof_unregister228257
-Node: acc_prof_lookup228832
-Node: acc_register_library229361
-Node: OpenACC Environment Variables229935
-Node: ACC_DEVICE_TYPE230436
-Node: ACC_DEVICE_NUM230985
-Node: ACC_PROFLIB231460
-Node: CUDA Streams Usage232078
-Ref: CUDA Streams Usage-Footnote-1234042
-Node: OpenACC Library Interoperability234151
-Ref: OpenACC Library Interoperability-Footnote-1240592
-Ref: OpenACC Library Interoperability-Footnote-2240844
-Node: OpenACC Profiling Interface241060
-Node: OpenMP-Implementation Specifics251816
-Node: Implementation-defined ICV Initialization252135
-Node: OpenMP Context Selectors253306
-Node: Memory allocation254701
-Node: Offload-Target Specifics264684
-Node: AMD Radeon264975
-Node: Foreign-runtime support for AMD GPUs269179
-Node: nvptx272338
-Ref: nvptx-Footnote-1276961
-Node: Foreign-runtime support for Nvidia GPUs277053
-Node: The libgomp ABI281087
-Node: Implementing MASTER construct281937
-Node: Implementing CRITICAL construct282354
-Node: Implementing ATOMIC construct283095
-Node: Implementing FLUSH construct283582
-Node: Implementing BARRIER construct283859
-Node: Implementing THREADPRIVATE construct284130
-Node: Implementing PRIVATE clause284789
-Node: Implementing FIRSTPRIVATE LASTPRIVATE COPYIN and COPYPRIVATE clauses285372
-Node: Implementing REDUCTION clause286699
-Node: Implementing PARALLEL construct287259
-Node: Implementing FOR construct288522
-Node: Implementing ORDERED construct290522
-Node: Implementing SECTIONS construct290830
-Node: Implementing SINGLE construct291598
-Node: Implementing OpenACC's PARALLEL construct292312
-Node: Reporting Bugs292572
-Node: Copying292935
-Node: GNU Free Documentation License330502
-Node: Funding355633
-Node: Library Index358158
+Node: OpenMP 4.56924
+Node: OpenMP 5.07100
+Node: OpenMP 5.112262
+Node: OpenMP 5.217895
+Ref: OpenMP 5.2-Footnote-121705
+Node: OpenMP 6.022134
+Node: OpenMP Technical Report 1431576
+Node: Runtime Library Routines32767
+Node: Thread Team Routines33430
+Node: omp_set_num_threads35017
+Node: omp_get_num_threads35887
+Node: omp_get_max_threads37010
+Node: omp_get_thread_num37781
+Node: omp_in_parallel38670
+Node: omp_set_dynamic39348
+Node: omp_get_dynamic40247
+Node: omp_get_cancellation41158
+Node: omp_set_nested41984
+Node: omp_get_nested43343
+Node: omp_set_schedule45145
+Node: omp_get_schedule46268
+Node: omp_get_teams_thread_limit47252
+Node: omp_get_supported_active_levels48032
+Node: omp_set_max_active_levels48849
+Node: omp_get_max_active_levels49818
+Node: omp_get_level50553
+Node: omp_get_ancestor_thread_num51199
+Node: omp_get_team_size52149
+Node: omp_get_active_level53148
+Node: Thread Affinity Routines53852
+Node: omp_get_proc_bind54252
+Node: Teams Region Routines55287
+Node: omp_get_num_teams55999
+Node: omp_get_team_num56497
+Node: omp_set_num_teams57008
+Node: omp_get_max_teams57904
+Node: omp_set_teams_thread_limit58612
+Node: omp_get_thread_limit59641
+Node: Tasking Routines60253
+Node: omp_get_max_task_priority60764
+Node: omp_in_explicit_task61359
+Node: omp_in_final62281
+Node: Resource Relinquishing Routines62952
+Node: omp_pause_resource63424
+Node: omp_pause_resource_all64537
+Node: Device Information Routines65540
+Node: omp_get_num_procs66495
+Node: omp_set_default_device67028
+Node: omp_get_default_device68036
+Node: omp_get_num_devices69212
+Node: omp_get_device_num70185
+Node: omp_get_device_from_uid71027
+Node: omp_get_uid_from_device72227
+Node: omp_is_initial_device73442
+Node: omp_get_initial_device74369
+Node: Device Memory Routines75620
+Node: omp_target_alloc76779
+Node: omp_target_free78386
+Node: omp_target_is_present79614
+Node: omp_target_is_accessible81032
+Node: omp_target_memcpy83198
+Node: omp_target_memcpy_async85076
+Node: omp_target_memcpy_rect87620
+Node: omp_target_memcpy_rect_async90955
+Node: omp_target_memset94955
+Node: omp_target_memset_async96555
+Node: omp_target_associate_ptr98747
+Node: omp_target_disassociate_ptr101837
+Node: omp_get_mapped_ptr103646
+Node: Lock Routines105716
+Node: omp_init_lock106564
+Node: omp_init_nest_lock107205
+Node: omp_destroy_lock107943
+Node: omp_destroy_nest_lock108634
+Node: omp_set_lock109388
+Node: omp_set_nest_lock110266
+Node: omp_unset_lock111182
+Node: omp_unset_nest_lock112139
+Node: omp_test_lock113161
+Node: omp_test_nest_lock114183
+Node: Timing Routines115199
+Node: omp_get_wtick115576
+Node: omp_get_wtime116143
+Node: Event Routine116924
+Node: omp_fulfill_event117256
+Node: Interoperability Routines118268
+Node: omp_get_num_interop_properties119144
+Node: omp_get_interop_int120481
+Node: omp_get_interop_ptr122636
+Node: omp_get_interop_str124760
+Node: omp_get_interop_name126874
+Node: omp_get_interop_type_desc128216
+Node: omp_get_interop_rc_desc129983
+Node: Memory Management Routines131512
+Node: omp_init_allocator132440
+Node: omp_destroy_allocator134137
+Node: omp_set_default_allocator135141
+Node: omp_get_default_allocator136203
+Node: omp_alloc137172
+Node: omp_aligned_alloc139351
+Node: omp_free141969
+Node: omp_calloc143676
+Node: omp_aligned_calloc145971
+Node: omp_realloc148603
+Node: Environment Display Routine152093
+Node: omp_display_env152469
+Node: Environment Variables155380
+Node: OMP_ALLOCATOR158189
+Node: OMP_AFFINITY_FORMAT159816
+Node: OMP_CANCELLATION162492
+Node: OMP_DISPLAY_AFFINITY163108
+Node: OMP_DISPLAY_ENV163815
+Node: OMP_DEFAULT_DEVICE164697
+Node: OMP_DYNAMIC165733
+Node: OMP_MAX_ACTIVE_LEVELS166372
+Node: OMP_MAX_TASK_PRIORITY167413
+Node: OMP_NESTED168120
+Node: OMP_NUM_TEAMS169405
+Node: OMP_NUM_THREADS170122
+Node: OMP_PROC_BIND171142
+Node: OMP_PLACES172758
+Node: OMP_STACKSIZE175574
+Node: OMP_SCHEDULE176500
+Node: OMP_TARGET_OFFLOAD177287
+Node: OMP_TEAMS_THREAD_LIMIT178818
+Node: OMP_THREAD_LIMIT179679
+Node: OMP_WAIT_POLICY180343
+Node: GOMP_CPU_AFFINITY181047
+Node: GOMP_DEBUG182814
+Node: GOMP_STACKSIZE183328
+Node: GOMP_SPINCOUNT184167
+Node: GOMP_RTEMS_THREAD_POOLS185439
+Node: Enabling OpenACC187688
+Node: OpenACC Runtime Library Routines188534
+Node: acc_get_num_devices192880
+Node: acc_set_device_type193622
+Node: acc_get_device_type194402
+Node: acc_set_device_num195447
+Node: acc_get_device_num196284
+Node: acc_get_property197103
+Node: acc_async_test199395
+Node: acc_async_test_all200394
+Node: acc_wait201301
+Node: acc_wait_all202192
+Node: acc_wait_all_async202973
+Node: acc_wait_async203741
+Node: acc_init204465
+Node: acc_shutdown205126
+Node: acc_on_device205809
+Node: acc_malloc207031
+Node: acc_free207755
+Node: acc_copyin208419
+Node: acc_present_or_copyin210054
+Node: acc_create211870
+Node: acc_present_or_create213550
+Node: acc_copyout215374
+Node: acc_delete217770
+Node: acc_update_device220109
+Node: acc_update_self221731
+Node: acc_map_data223369
+Node: acc_unmap_data224465
+Node: acc_deviceptr225223
+Node: acc_hostptr226034
+Node: acc_is_present226834
+Node: acc_memcpy_to_device228399
+Node: acc_memcpy_from_device229886
+Node: acc_memcpy_device231430
+Node: acc_attach233036
+Node: acc_detach234063
+Node: acc_get_current_cuda_device235446
+Node: acc_get_current_cuda_context236039
+Node: acc_get_cuda_stream236647
+Node: acc_set_cuda_stream237246
+Node: acc_prof_register237929
+Node: acc_prof_unregister238496
+Node: acc_prof_lookup239071
+Node: acc_register_library239600
+Node: OpenACC Environment Variables240174
+Node: ACC_DEVICE_TYPE240675
+Node: ACC_DEVICE_NUM241224
+Node: ACC_PROFLIB241699
+Node: CUDA Streams Usage242317
+Ref: CUDA Streams Usage-Footnote-1244281
+Node: OpenACC Library Interoperability244390
+Ref: OpenACC Library Interoperability-Footnote-1250831
+Ref: OpenACC Library Interoperability-Footnote-2251083
+Node: OpenACC Profiling Interface251299
+Node: OpenMP-Implementation Specifics262055
+Node: Implementation-defined ICV Initialization262374
+Node: OpenMP Context Selectors263545
+Node: Memory allocation265304
+Node: Offload-Target Specifics276831
+Node: AMD Radeon277122
+Node: Foreign-runtime support for AMD GPUs283220
+Node: nvptx286379
+Ref: nvptx-Footnote-1292361
+Node: Foreign-runtime support for Nvidia GPUs292453
+Node: The libgomp ABI296487
+Node: Implementing MASKED and MASTER construct297348
+Node: Implementing CRITICAL construct297916
+Node: Implementing ATOMIC construct298668
+Node: Implementing FLUSH construct299155
+Node: Implementing BARRIER construct299432
+Node: Implementing THREADPRIVATE construct299703
+Node: Implementing PRIVATE clause300362
+Node: Implementing FIRSTPRIVATE LASTPRIVATE COPYIN and COPYPRIVATE clauses300945
+Node: Implementing REDUCTION clause302272
+Node: Implementing PARALLEL construct302832
+Node: Implementing FOR construct304095
+Node: Implementing ORDERED construct306095
+Node: Implementing SECTIONS construct306403
+Node: Implementing SINGLE construct307171
+Node: Implementing OpenACC's PARALLEL construct307885
+Node: Reporting Bugs308145
+Node: Copying308508
+Node: GNU Free Documentation License346075
+Node: Funding371206
+Node: Library Index373731
 
 End Tag Table
 

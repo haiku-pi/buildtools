@@ -49,7 +49,7 @@ template<int N>
 int
 getT2 (auto... Ts)
 {
-  return Ts...[N]; // { dg-error "pack index is out of range" }
+  return Ts...[N]; // { dg-error "pack index '\[0-9]*' is out of range for pack of length '1'" }
 }
 
 template<auto N, typename... Ts>
@@ -63,7 +63,7 @@ template<auto N, typename... Ts>
 void
 badtype2 ()
 {
-  Ts...[N] t; // { dg-error "pack index is out of range" }
+  Ts...[N] t; // { dg-error "pack index '1' is out of range for pack of length '1'" }
 }
 
 template<auto N, typename... Ts>

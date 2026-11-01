@@ -3,7 +3,7 @@
 <!-- Created by GNU Texinfo 7.1, https://www.gnu.org/software/texinfo/ -->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<!-- Copyright © 1988-2025 Free Software Foundation, Inc.
+<!-- Copyright © 1988-2026 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3 or
@@ -35,7 +35,6 @@ You have freedom to copy and modify this GNU Manual, like GNU
 <!--
 a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
 span:hover a.copiable-link {visibility: visible}
-strong.def-name {font-family: monospace; font-weight: bold; font-size: larger}
 -->
 </style>
 
@@ -81,9 +80,8 @@ compiler, and versions prior to 4.8 allow bootstrapping with an ISO
 C89 compiler.
 </p>
 <p>If you need to build an intermediate version of GCC in order to
-bootstrap current GCC, consider GCC 9.5: it can build the current Ada
-and D compilers, and was also the version that declared C++17 support
-stable.
+bootstrap current GCC, consider GCC 9.5: it can build the current D
+compiler, and was also the version that declared C++17 support stable.
 </p>
 <p>To build all languages in a cross-compiler or other configuration where
 3-stage bootstrap is not performed, you need to start with an existing
@@ -117,7 +115,7 @@ the specified architecture string is non-canonical, then you will need
 <dt><a class="anchor" id="GNAT-prerequisite"></a>GNAT</dt>
 <dd>
 <p>In order to build GNAT, the Ada compiler, you need a working GNAT
-compiler (GCC version 5.1 or later).
+compiler (GCC version 5.4 or later).
 </p>
 <p>This includes GNAT tools such as <code class="command">gnatmake</code> and
 <code class="command">gnatlink</code>, since the Ada front end is written in Ada and
@@ -154,21 +152,16 @@ released on 2017-05-06.
 <p>The gcobol documentation is maintained as manpages using troff
 mdoc. GNU groff is required to convert them to PDF format.  Conversion
 to HTML is done with mandoc, available at
-<a class="uref" href="http://mdocml.bsd.lv/">http://mdocml.bsd.lv/</a>.
+<a class="uref" href="https://mandoc.bsd.lv">https://mandoc.bsd.lv</a>.
+</p>
+<p>The COBOL runtime library. libgcobol, requires libxml2 2.9 or later.
+It implements support for <code class="code">XML PARSE</code>.
 </p>
 <p>Because ISO COBOL defines strict requirements for numerical precision,
-gcobol requires hardware with 128-bit computation instructions.  This
-requirement applies to both host and target. For integer and
-fixed-point computation, gcobol uses
-</p><dl class="first-deftp">
-<dt class="deftp" id="index-_005f_005fint128"><span class="category-def">Data type: </span><span><strong class="def-name">__int128</strong><a class="copiable-link" href="#index-_005f_005fint128"> &para;</a></span></dt>
-</dl>
-<p>meaning <code class="code">16 == sizeof(long long int)</code>.
-For floating point, gcobol uses
-</p><dl class="first-deftp">
-<dt class="deftp" id="index-_005fFloat128"><span class="category-def">Data type: </span><span><strong class="def-name">_Float128</strong><a class="copiable-link" href="#index-_005fFloat128"> &para;</a></span></dt>
-</dl>
-<p>(On some architectures, GCC supports 128-bit floating point in software.)
+gcobol computes with 128-bit operands.  This requirement applies to
+both host and target. For integers, gcobol requires the platform to
+support the GCC <code class="code">__int128</code> type.  For floating point it uses
+<code class="code">_Float128</code> or similar.
 </p>
 <p>gcobol has so far been tested on two architectures only: x86_64 and
 aarch64 with little-endian encoding.
@@ -244,7 +237,7 @@ work when configuring GCC.
 If in doubt, use a recent GNU awk version.
 </p>
 </dd>
-<dt>GNU binutils</dt>
+<dt>GNU Binutils</dt>
 <dd>
 <p>Necessary in some circumstances, optional in others.  See the
 host/target specific instructions for your platform for the exact
@@ -255,7 +248,7 @@ with GNU libtool that includes doing a bootstrap with LTO enabled.
 </p>
 </dd>
 <dt>gzip version 1.2.4 (or later) or</dt>
-<dt>bzip2 version 1.0.2 (or later)</dt>
+<dt>xz version 5.0 (or later)</dt>
 <dd>
 <p>Necessary to uncompress GCC <code class="command">tar</code> files when source code is
 obtained via HTTPS mirror sites.
@@ -515,6 +508,9 @@ current operating system distribution is likely to be adequate for
 building the documentation without error, but you may still want to
 install a newer release to get the best appearance and usability of
 the generated manuals.
+</p>
+<p>Also note that Texinfo older than version 7.1 may throw incorrect build
+warnings, though the generated documentation is correct.
 </p>
 </dd>
 <dt>TeX (any working version)</dt>
