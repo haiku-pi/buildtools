@@ -42,7 +42,8 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 
 static _Unwind_Reason_Code
 aarch64_haiku_fallback_frame_state
-(struct _Unwind_Context *context, _Unwind_FrameState *fs)
+(struct _Unwind_Context *context __attribute__ ((__unused__)),
+ _Unwind_FrameState *fs __attribute__ ((__unused__)))
 {
   // For now just signal end of stack. Once the Haiku implementation
   // for AArch64 is more mature we can consider writing something similar
